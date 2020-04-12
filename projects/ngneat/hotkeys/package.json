@@ -1,0 +1,26 @@
+{
+  "name": "@ngneat/hotkeys",
+  "version": "1.0.0",
+  "peerDependencies": {
+    "@angular/common": "^9.0.7",
+    "@angular/core": "^9.0.7",
+    "tslib": "^1.10.0"
+  },
+  "keywords": [
+    "angular",
+    "angular 2",
+    "hotkeys"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "ngneat/issue"
+  },
+  "homepage": "ngneat#readme",
+  "repository": {
+    "type": "git",
+    "url": "ngneat"
+  }
+}
