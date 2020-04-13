@@ -1,8 +1,13 @@
-<table cellspacing="0" width="100%">
-  <tbody class="hotkeys-help">
-    <tr class="hotkeys-help-shortcut" *ngFor="let hotkey of hotkeys">
-      <td class="hotkeys-help-shortcut-description">{{ hotkey.desc }}</td>
-      <td class="hotkeys-help-shortcut-keys">
+<table class="hotkeys-help" cellspacing="0" width="100%" *ngFor="let hotkeyGroup of hotkeys">
+  <thead *ngIf="hotkeyGroup.group">
+    <tr>
+      <th class="hotkeys-help-group" colspan="2">{{hotkeyGroup.group}}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="hotkeys-help-shortcut" *ngFor="let hotkey of hotkeyGroup.keys">
+      <td class="hotkeys-help-shortcut-description" width="75%">{{ hotkey.desc }}</td>
+      <td class="hotkeys-help-shortcut-keys" width="25%">
         <kbd [innerHTML]="hotkey.keys | hotkeyShortcut"></kbd>
       </td>
     </tr>

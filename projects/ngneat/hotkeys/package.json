@@ -2,11 +2,9 @@
   "name": "@ngneat/hotkeys",
   "version": "1.0.0",
   "peerDependencies": {
-    "@angular/common": "^9.0.7",
-    "@angular/core": "^9.0.7",
-    "rxjs": "^6.5.5",
-    "@angular/material": "^9.2.0",
-    "@angular/animations": "^9.1.1",
+    "@angular/common": "^9.0.0",
+    "@angular/core": "^9.0.0",
+    "rxjs": "^6.0.0",
     "tslib": "^1.10.0"
   },
   "keywords": [

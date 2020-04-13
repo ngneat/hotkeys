@@ -21,15 +21,22 @@ export class HotkeysDirective implements OnDestroy {
   constructor(private hotkeysService: HotkeysService, private elementRef: ElementRef) {}
 
   @Input()
-  set hotkeys(options: InlineHotkey[]) {
+  set hotkeys(options: InlineHotkey | InlineHotkey[]) {
+    const coercedOptions = coerceArray(options);
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
     this.subscription = merge(
-      options.map(o => this.hotkeysService.addShortcut({ ...o, element: this.elementRef.nativeElement }))
+      coercedOptions.map(o => this.hotkeysService.addShortcut({ ...o, element: this.elementRef.nativeElement }))
     )
       .pipe(mergeAll())
       .subscribe(e => this.hotkey.next(e));
+  }
+
+  @Input()
+  set keys(keys: string | string[]) {
+    const coercedKeys = coerceArray(keys);
+    this.hotkeys = coercedKeys.map(k => ({ keys: k }));
   }
 
   @Output()
@@ -40,4 +47,8 @@ export class HotkeysDirective implements OnDestroy {
       this.subscription.unsubscribe();
     }
   }
+}
+
+function coerceArray(params: any | any[]) {
+  return Array.isArray(params) ? params : [params];
 }
