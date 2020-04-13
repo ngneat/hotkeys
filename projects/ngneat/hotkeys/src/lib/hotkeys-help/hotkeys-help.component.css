@@ -1,0 +1,16 @@
+.hotkeys-help .hotkeys-help-shortcut td {
+  height: 3em;
+  border-bottom: 1px lightgray solid;
+}
+
+.hotkeys-help-shortcut .hotkeys-help-shortcut-keys {
+  font-family: monospace;
+  text-align: center;
+}
+
+.hotkeys-help-shortcut .hotkeys-help-shortcut-keys kbd {
+  padding: 0.125em 0.5em;
+  border: 1px solid #c5c5c5;
+  border-radius: 3px;
+  box-shadow: 1px 1px grey;
+}

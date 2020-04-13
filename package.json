@@ -20,10 +20,12 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "~9.0.6",
+    "@angular/cdk": "^9.2.0",
     "@angular/common": "~9.0.6",
     "@angular/compiler": "~9.0.6",
     "@angular/core": "~9.0.6",
     "@angular/forms": "~9.0.6",
+    "@angular/material": "^9.2.0",
     "@angular/platform-browser": "~9.0.6",
     "@angular/platform-browser-dynamic": "~9.0.6",
     "@angular/router": "~9.0.6",

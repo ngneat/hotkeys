@@ -1,0 +1,10 @@
+<table cellspacing="0" width="100%">
+  <tbody class="hotkeys-help">
+    <tr class="hotkeys-help-shortcut" *ngFor="let hotkey of hotkeys">
+      <td class="hotkeys-help-shortcut-description">{{ hotkey.desc }}</td>
+      <td class="hotkeys-help-shortcut-keys">
+        <kbd [innerHTML]="hotkey.keys | hotkeyShortcut"></kbd>
+      </td>
+    </tr>
+  </tbody>
+</table>

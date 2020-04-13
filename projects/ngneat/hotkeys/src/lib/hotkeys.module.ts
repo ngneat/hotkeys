@@ -1,9 +1,15 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { HotkeysComponent } from './hotkeys.component';
+import { MatDialogModule } from '@angular/material/dialog';
+
+import { HotkeyShortcutPipe } from './hotkey-shortcut.pipe';
+import { HotkeysHelpComponent } from './hotkeys-help/hotkeys-help.component';
+import { HotkeysDirective } from './hotkeys.directive';
 
 @NgModule({
-  declarations: [HotkeysComponent],
-  imports: [],
-  exports: [HotkeysComponent]
+  declarations: [HotkeysDirective, HotkeysHelpComponent, HotkeyShortcutPipe],
+  entryComponents: [HotkeysHelpComponent],
+  imports: [CommonModule, MatDialogModule],
+  exports: [HotkeysDirective]
 })
 export class HotkeysModule {}
