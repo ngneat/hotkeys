@@ -1,12 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { hostPlatform } from './utils/platform';
 
-const applePlatformSymbols = {
-  meta: '&#8984;',
+const symbols = {
   shift: '&#8679;',
-  altleft: '&#8997;',
-  control: '&#8963;',
   backspace: '&#9003;',
-  escape: '&#9099;',
   tab: '&#8677;',
   space: '&#9251;',
   left: '&#8592;',
@@ -16,19 +13,18 @@ const applePlatformSymbols = {
   enter: '&#8996;'
 };
 
-const pcPlatformSymbols = {
+
+const appleSymbols = {
+  meta: '&#8984;',
+  altleft: '&#8997;',
+  control: '&#8963;',
+  escape: '&#9099;',
+};
+
+const pcSymbols = {
   control: 'Ctrl',
-  shift: '&#8679;',
   altleft: 'Alt',
-  backspace: '&#9003;',
   escape: 'Esc',
-  tab: '&#8677;',
-  space: '&#9251;',
-  left: '&#8592;',
-  right: '&#8594;',
-  up: '&#8593;',
-  down: '&#8595;',
-  enter: '&#8996;'
 };
 
 @Pipe({
@@ -36,12 +32,9 @@ const pcPlatformSymbols = {
 })
 export class HotkeyShortcutPipe implements PipeTransform {
   private readonly symbols;
-  private appleDevices = ['Mac', 'iPhone', 'iPad', 'iPhone'];
-
   constructor() {
-    this.symbols = this.appleDevices.some(d => navigator.platform.includes(d))
-      ? applePlatformSymbols
-      : pcPlatformSymbols;
+    const platform = hostPlatform();
+    this.symbols = platform === 'apple' ? {...symbols, ...appleSymbols} : {...symbols, ...pcSymbols};
   }
 
   transform(value: string): any {
