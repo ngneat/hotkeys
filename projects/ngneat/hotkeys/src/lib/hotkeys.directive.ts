@@ -2,18 +2,14 @@ import { Directive, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Outpu
 import { merge, Subscription } from 'rxjs';
 import { mergeAll } from 'rxjs/operators';
 
-import { HotkeysService } from './hotkeys.service';
+import { Hotkey, HotkeysService } from './hotkeys.service';
 import { coerceArray } from './utils/array';
 
 interface Options {
-  group: string;
   trigger: 'keydown' | 'keyup';
-  description: string;
   showInHelpMenu: boolean;
   preventDefault: boolean;
 }
-
-export type InlineHotkey = Partial<Options> & { keys: string };
 
 @Directive({
   selector: '[hotkeys]'
@@ -23,40 +19,41 @@ export class HotkeysDirective implements OnChanges, OnDestroy {
 
   constructor(private hotkeysService: HotkeysService, private elementRef: ElementRef) {}
 
-  @Input()
-  set keys(keys: string | string[]) {
-    console.log('keys', keys);
-    const coercedKeys = coerceArray(keys);
-    this.setHotkeys(coercedKeys.map(k => ({ keys: k })));
-  }
-
-  @Input() hotkeys: InlineHotkey | InlineHotkey[];
+  @Input() hotkeys: string;
+  @Input() hotkeysGroup: string;
+  @Input() hotkeysOptions: Options;
+  @Input() hotkeysDescription: string;
 
   @Output()
   hotkey = new EventEmitter<KeyboardEvent>();
 
   ngOnChanges(changes: SimpleChanges): void {
-    // FIXME: Angular initially sends an empty string even when 'hotkeys' is not being used as input
-    if (changes.hotkeys.firstChange && !changes.hotkeys.currentValue) {
-      return;
-    }
-    if (changes.hotkeys) {
-      this.setHotkeys(coerceArray(changes.hotkeys.currentValue));
-    }
+     this.deleteHotkeys();
+     if (!this.hotkeys) { return; }
+     const hotkey: Hotkey = {
+       keys: this.hotkeys,
+       group: this.hotkeysGroup || '',
+       description: this.hotkeysDescription || '',
+       ...(this.hotkeysOptions || {})
+     };
+     this.setHotkeys(hotkey);
   }
 
   ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+   this.deleteHotkeys();
   }
 
-  private setHotkeys(options: InlineHotkey[]) {
+  private deleteHotkeys() {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+    this.subscription = null;
+  }
+
+  private setHotkeys(hotkeys: Hotkey | Hotkey[]) {
+    const coercedHotkeys = coerceArray(hotkeys);
     this.subscription = merge(
-      options.map(o => this.hotkeysService.addShortcut({ ...o, element: this.elementRef.nativeElement }))
+      coercedHotkeys.map(o => this.hotkeysService.addShortcut({ ...o, element: this.elementRef.nativeElement }))
     )
       .pipe(mergeAll())
       .subscribe(e => this.hotkey.next(e));

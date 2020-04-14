@@ -28,9 +28,9 @@ const pcSymbols = {
 };
 
 @Pipe({
-  name: 'hotkeyShortcut'
+  name: 'hotkeysShortcut'
 })
-export class HotkeyShortcutPipe implements PipeTransform {
+export class HotkeysShortcutPipe implements PipeTransform {
   private readonly symbols;
   constructor() {
     const platform = hostPlatform();

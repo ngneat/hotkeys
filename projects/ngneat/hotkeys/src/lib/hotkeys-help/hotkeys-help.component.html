@@ -8,7 +8,7 @@
     <tr class="hotkeys-help-shortcut" *ngFor="let hotkey of hotkeyGroup.hotkeys">
       <td class="hotkeys-help-shortcut-description" width="75%">{{ hotkey.description }}</td>
       <td class="hotkeys-help-shortcut-keys" width="25%">
-        <kbd [innerHTML]="hotkey.keys | hotkeyShortcut"></kbd>
+        <kbd [innerHTML]="hotkey.keys | hotkeysShortcut"></kbd>
       </td>
     </tr>
   </tbody>

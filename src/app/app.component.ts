@@ -1,6 +1,6 @@
 import { AfterViewChecked, AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { HotkeysService, InlineHotkey } from '@ngneat/hotkeys';
+import { HotkeysService } from '@ngneat/hotkeys';
 import { HotkeysHelpComponent } from 'projects/ngneat/hotkeys/src/lib/hotkeys-help/hotkeys-help.component';
 
 @Component({
@@ -10,10 +10,6 @@ import { HotkeysHelpComponent } from 'projects/ngneat/hotkeys/src/lib/hotkeys-he
 })
 export class AppComponent implements AfterViewInit, AfterViewChecked {
   @ViewChild('container') container;
-  inlineHotkeys: InlineHotkey[] = [
-    { keys: 'q', description: 'quit action' },
-    { keys: 'w', description: 'duplicate' }
-  ];
 
   constructor(private hotkeys: HotkeysService, private dialog: MatDialog) {
     /*     fromEvent(document, 'keydown').subscribe(e => console.log(e)); */
