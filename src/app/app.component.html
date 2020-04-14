@@ -1,9 +1,5 @@
-<div
-  [hotkeys]="inlineHotkeys"
-  (hotkey)="handleHotkey($event)"
-  #container
-  style="width: 100%; height: 100vh;"
-  tabindex="0"
->
-  NgNeat Hotkeys!
+<div #container [hotkeys]="inlineHotkeys" style="width: 100%; height: 100vh;" tabindex="0">
+  <div hotkeys keys="meta.a" (hotkey)="handleHotkey($event)" tabindex="1">
+    NgNeat Hotkeys!
+  </div>
 </div>

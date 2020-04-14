@@ -32,15 +32,14 @@ export class AppComponent implements AfterViewInit, AfterViewChecked {
       })
       .subscribe(e => console.log('Hotkey', e));
 
-    this.hotkeys
-      .addShortcut({
-        keys: 'meta.h',
-        trigger: 'keydown',
-        element: this.container.nativeElement,
-        description: 'help',
-        group: 'Basic'
-      })
-      .subscribe(e => this.dialog.open(HotkeysHelpComponent, { width: '500px' }));
+    const dispose = this.hotkeys.onShortcut((e, k, t) => console.log('callback', k));
+    // dispose();
+
+    const helpFcn: () => void = () => {
+      this.dialog.open(HotkeysHelpComponent, { width: '500px' });
+    };
+
+    this.hotkeys.registerHelpModal(helpFcn);
 
     this.hotkeys
       .addShortcut({
