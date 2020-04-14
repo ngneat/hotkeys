@@ -10,6 +10,6 @@ import { HotkeysDirective } from './hotkeys.directive';
   declarations: [HotkeysDirective, HotkeysHelpComponent, HotkeyShortcutPipe],
   entryComponents: [HotkeysHelpComponent],
   imports: [CommonModule, MatDialogModule],
-  exports: [HotkeysDirective]
+  exports: [HotkeysDirective, HotkeysHelpComponent, HotkeyShortcutPipe]
 })
 export class HotkeysModule {}
