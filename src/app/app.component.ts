@@ -1,7 +1,6 @@
 import { AfterViewChecked, AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { HotkeysService } from '@ngneat/hotkeys';
-import { HotkeysHelpComponent } from 'projects/ngneat/hotkeys/src/lib/hotkeys-help/hotkeys-help.component';
+import { HotkeysService, HotkeysHelpComponent } from '@ngneat/hotkeys';
 
 @Component({
   selector: 'app-root',

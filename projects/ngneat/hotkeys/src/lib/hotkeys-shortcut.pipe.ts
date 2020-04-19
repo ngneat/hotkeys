@@ -34,7 +34,7 @@ export class HotkeysShortcutPipe implements PipeTransform {
   private readonly symbols;
   constructor() {
     const platform = hostPlatform();
-    this.symbols = platform === 'apple' ? {...symbols, ...appleSymbols} : {...symbols, ...pcSymbols};
+    this.symbols = this.getPlatformSymbols(platform);
   }
 
   transform(value: string): any {
@@ -46,5 +46,9 @@ export class HotkeysShortcutPipe implements PipeTransform {
       .map(c => c.toLowerCase())
       .map(c => this.symbols[c] || c)
       .join(' ');
+  }
+
+  private getPlatformSymbols(platform): any {
+    return platform === 'apple' ? {...symbols, ...appleSymbols} : {...symbols, ...pcSymbols};
   }
 }

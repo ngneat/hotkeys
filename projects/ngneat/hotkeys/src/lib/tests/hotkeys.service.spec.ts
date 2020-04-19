@@ -1,55 +1,129 @@
 /* tslint:disable:no-unused-variable */
 
-import { fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
-import { HotkeysService } from '@ngneat/hotkeys';
+import { TestBed } from '@angular/core/testing';
+import { Hotkey, HotkeysService } from '@ngneat/hotkeys';
 import { DOCUMENT } from '@angular/common';
+import * as Platform from '../utils/platform';
+import createSpy = jasmine.createSpy;
+import { createServiceFactory, SpectatorService } from '@ngneat/spectator';
 
+// TODO: Use Spectator to trigger keyboard events
 describe('Service: Hotkeys', () => {
-  let hotkeys;
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [HotkeysService]
-    });
-    hotkeys = TestBed.inject(HotkeysService);
-  });
 
-  it('should run', inject([HotkeysService], (service: HotkeysService) => {
-    expect(service).toBeTruthy();
-  }));
+  let spectator: SpectatorService<HotkeysService>;
+  const createService = createServiceFactory(HotkeysService);
+
+  beforeEach(() => spectator = createService());
+
 
   it('should add shortcut', () => {
-    hotkeys.addShortcut({keys: 'a'}).subscribe();
-    expect(hotkeys.getShortcuts().length).toBe(1);
+    spectator.service.addShortcut({keys: 'a'}).subscribe();
+    expect(spectator.service.getHotkeys().length).toBe(1);
   });
 
-  it('should listen to keydown', fakeAsync(() => {
-    let event: KeyboardEvent = null;
-    hotkeys.addShortcut({keys: 'a'}).subscribe((e) => {
-      event = e;
-    });
+  it('should listen to keydown', () => {
+    const spyFcn = createSpy('subscribe', (e) => {});
+    spectator.service.addShortcut({keys: 'a'}).subscribe(spyFcn);
     fakeKeyboardPress('a');
-    tick(500);
-    expect(event).toBeTruthy();
-    expect(event.key).toBe('a');
-  }));
+    expect(spyFcn).toHaveBeenCalled();
+  });
 
-  it('should call callback', fakeAsync(() => {
-    let event;
-    hotkeys.addShortcut({keys: 'a'}).subscribe();
-    hotkeys.onShortcut(((e, keys, target) => {
-      event  = e;
-    }));
+  it('should listen to keyup', () => {
+    const spyFcn = createSpy('subscribe', (e) => {});
+    spectator.service.addShortcut({keys: 'a', trigger: 'keyup'}).subscribe(spyFcn);
+    fakeKeyboardPress('a', 'keyup');
+    expect(spyFcn).toHaveBeenCalled();
+  });
+
+  it('should call callback', () => {
+    const spyFcn = createSpy('subscribe', (...args) => {});
+    spectator.service.addShortcut({keys: 'a'}).subscribe();
+    spectator.service.onShortcut(spyFcn);
     fakeKeyboardPress('a');
-    tick(500);
-    expect(event).toBeTruthy();
-    expect(event.key).toBe('a');
-  }));
+    expect(spyFcn).toHaveBeenCalled();
+  });
+
+  it('should honor target element', () => {
+    const spyFcn = createSpy('subscribe', (...args) => {});
+    spectator.service.addShortcut({keys: 'a', element: document.body}).subscribe(spyFcn);
+    fakeBodyKeyboardPress('a');
+    expect(spyFcn).toHaveBeenCalled();
+  });
+
+  it('should change meta to ctrl', () => {
+    spyOn(Platform, 'hostPlatform').and.returnValue('pc');
+    spectator.service.addShortcut({keys: 'meta.a'}).subscribe();
+    const shortcuts = spectator.service.getShortcuts();
+    expect(shortcuts[0].hotkeys[0].keys).toBe('control.a');
+  });
+
+  it('should exclude shortcut', () => {
+    spyOn(Platform, 'hostPlatform').and.returnValue('pc');
+    spectator.service.addShortcut({keys: 'meta.a', showInHelpMenu: false}).subscribe();
+    const shortcuts = spectator.service.getShortcuts();
+    expect(shortcuts.length).toBe(0);
+  });
+
+  it('should use defaults', () => {
+    spectator.service.addShortcut({keys: 'a'}).subscribe();
+    const hks = spectator.service.getHotkeys();
+    expect(hks[0]).toEqual(
+      {
+        element: document.documentElement,
+        showInHelpMenu: true,
+        keys: 'a',
+        trigger: 'keydown',
+        group: '',
+        description: '',
+        preventDefault: true}
+    );
+  });
+
+  it('should use options', () => {
+    const options: Hotkey = {
+      element: document.body,
+      showInHelpMenu: false,
+      keys: 'a',
+      trigger: 'keydown',
+      group: 'test group',
+      description: 'test description',
+      preventDefault: false
+    };
+
+    spectator.service.addShortcut(options).subscribe();
+    const hks = spectator.service.getHotkeys();
+    expect(hks[0]).toEqual(options);
+  });
+
+  it('should return shortcut', () => {
+    const options: Hotkey = {
+      showInHelpMenu: true,
+      keys: 'a',
+      group: 'test group',
+      description: 'test description'
+    };
+
+    spectator.service.addShortcut(options).subscribe();
+    const scts = spectator.service.getShortcuts();
+    expect(scts[0]).toEqual({
+      group: 'test group',
+      hotkeys: [{
+        keys: 'a',
+        description: 'test description'
+      }]
+    });
+  });
 });
 
 
-function fakeKeyboardPress(key: string) {
+function fakeKeyboardPress(key: string, type = 'keydown') {
   const html = TestBed.inject(DOCUMENT).documentElement;
-  html.dispatchEvent(new KeyboardEvent('keydown', {key}));
+  html.dispatchEvent(new KeyboardEvent(type, {key}));
+}
+
+function fakeBodyKeyboardPress(key: string, type = 'keydown') {
+  const html = TestBed.inject(DOCUMENT).body;
+  html.dispatchEvent(new KeyboardEvent(type, {key}));
 }
 
 

@@ -1,29 +1,62 @@
-import { fakeAsync, tick } from '@angular/core/testing';
-import { HotkeysDirective } from '@ngneat/hotkeys';
+import { HotkeysDirective, HotkeysService } from '@ngneat/hotkeys';
 import { createDirectiveFactory, SpectatorDirective } from '@ngneat/spectator';
+import { TestBed } from '@angular/core/testing';
 
 
 describe('Directive: Hotkeys', () => {
   let spectator: SpectatorDirective<HotkeysDirective>;
   const createDirective = createDirectiveFactory(HotkeysDirective);
 
-  beforeEach(() => {
+  it('should trigger hotkey', () => {
     spectator = createDirective(`<div [hotkeys]="'a'"></div>`);
-  });
-
-  it('should create an instance', () => {
-    expect(spectator).toBeTruthy();
-  });
-
-  it('should trigger hotkey', fakeAsync(() => {
-    const directive = spectator;
-    let event;
-    directive.output('hotkey').subscribe((e: KeyboardEvent) => {
-      event = e;
+    spectator.output('hotkey').subscribe((e: KeyboardEvent) => {
+      expect(e).toBeTruthy();
     });
-    directive.dispatchKeyboardEvent(directive.element, 'keydown', 'a');
-    tick(500);
-    expect(event).toBeTruthy();
-  }));
+    spectator.dispatchKeyboardEvent(spectator.element, 'keydown', 'a');
+    spectator.fixture.detectChanges();
+  });
+
+  it('should register hotkey', () => {
+    spectator = createDirective(`<div [hotkeys]="'a'"></div>`);
+    spectator.fixture.detectChanges();
+    const hotkeysService = spectator.inject(HotkeysService);
+    const hotkeys = hotkeysService.getHotkeys();
+    expect(hotkeys.length).toBe(1);
+  });
+
+  it('should register proper key', () => {
+    spectator = createDirective(`<div [hotkeys]="'a'"></div>`);
+    spectator.fixture.detectChanges();
+    const provider = TestBed.inject(HotkeysService);
+    const hotkey = provider.getHotkeys()[0];
+    expect(hotkey.keys).toBe('a');
+  });
+
+  it('should register proper group', () => {
+    spectator = createDirective(`<div [hotkeys]="'a'" [hotkeysGroup]="'test group'"></div>`);
+    spectator.fixture.detectChanges();
+    const provider = TestBed.inject(HotkeysService);
+    const hotkey = provider.getHotkeys()[0];
+    expect(hotkey.group).toBe('test group');
+  });
+
+  it('should register proper description', () => {
+    spectator = createDirective(`<div [hotkeys]="'a'" [hotkeysDescription]="'test description'"></div>`);
+    spectator.fixture.detectChanges();
+    const provider = TestBed.inject(HotkeysService);
+    const hotkey = provider.getHotkeys()[0];
+    expect(hotkey.description).toBe('test description');
+  });
+
+  it('should register proper options', () => {
+    spectator = createDirective(`<div [hotkeys]="'a'" [hotkeysOptions]="{trigger: 'keyup', showInHelpMenu: false, preventDefault: false}"></div>`);
+    spectator.fixture.detectChanges();
+    const provider = TestBed.inject(HotkeysService);
+    const hotkey = provider.getHotkeys()[0];
+    expect(hotkey.preventDefault).toBe(false);
+    expect(hotkey.trigger).toBe('keyup');
+    expect(hotkey.showInHelpMenu).toBe(false);
+  });
+
 });
 

@@ -5,9 +5,8 @@ export function hostPlatform(): Platform {
   return appleDevices.some(d => navigator.platform.includes(d)) ? 'apple' : 'pc';
 }
 
-export function normalizeKeys(keys: string): string {
+export function normalizeKeys(keys: string, platform: Platform): string {
   const lowercaseKeys = keys.toLowerCase();
-  const platform = hostPlatform();
   switch (platform) {
     case 'pc':
       return lowercaseKeys

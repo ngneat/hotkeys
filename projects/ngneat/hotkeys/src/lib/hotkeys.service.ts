@@ -1,9 +1,9 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
 import { EventManager } from '@angular/platform-browser';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
-import { normalizeKeys } from './utils/platform';
+import { hostPlatform, normalizeKeys } from './utils/platform';
 
 interface Options {
   group: string;
@@ -22,7 +22,7 @@ export type HotkeyCallback = (event: KeyboardEvent, keys: string, target: HTMLEl
   providedIn: 'root'
 })
 export class HotkeysService {
-  private readonly hotkeys = new Map<number, Hotkey>();
+  private readonly hotkeys = new Map<string, Hotkey>();
   private readonly defaults: Options = {
     group: '',
     trigger: 'keydown',
@@ -31,35 +31,39 @@ export class HotkeysService {
     showInHelpMenu: true,
     preventDefault: true
   };
-  // keeps count of the number of hotkeys
-  private hotkeyNumber = 0;
   private callbacks: HotkeyCallback[] = [];
 
   constructor(private eventManager: EventManager, @Inject(DOCUMENT) private document: Document) {}
+
+  getHotkeys(): Hotkey[] {
+   return Array.from(this.hotkeys.values()).map(h => ({...h}));
+  }
 
   getShortcuts(): HotkeyGroup[] {
     const hotkeys = Array.from(this.hotkeys.values());
     const groups: HotkeyGroup[] = [];
     for (const hotkey of hotkeys) {
+      if (!hotkey.showInHelpMenu) { continue; }
       let group = groups.find(g => g.group === hotkey.group);
       if (!group) {
         group = { group: hotkey.group, hotkeys: [] };
         groups.push(group);
       }
-      const normalizedKeys = normalizeKeys(hotkey.keys);
-      group.hotkeys.push({ keys: normalizedKeys, description: hotkey.description });
+      const normalizedKeys = normalizeKeys(hotkey.keys, hostPlatform());
+      group.hotkeys.push({ keys: normalizedKeys, description: hotkey.description});
     }
     return groups;
   }
 
   addShortcut(options: Hotkey): Observable<KeyboardEvent> {
     const mergedOptions = { ...this.defaults, ...options };
-    // use the hotkey count as id to unregister shortcut when tearing down
-    // the subscription. This allows adding duplicate keys/groups.
-    const hotkeyId = this.hotkeyNumber++;
-    const normalizedKeys = normalizeKeys(mergedOptions.keys);
+    const normalizedKeys = normalizeKeys(mergedOptions.keys, hostPlatform());
+    if (this.hotkeys.has(normalizedKeys)) {
+      console.error('duplicated shortcut');
+      return of(null);
+    }
 
-    this.hotkeys.set(hotkeyId, mergedOptions);
+    this.hotkeys.set(normalizedKeys, mergedOptions);
     const event = `${mergedOptions.trigger}.${normalizedKeys}`;
 
     return new Observable(observer => {
@@ -67,14 +71,14 @@ export class HotkeysService {
         if (mergedOptions.preventDefault) {
           e.preventDefault();
         }
-        const hotkey = this.hotkeys.get(hotkeyId);
+        const hotkey = this.hotkeys.get(normalizedKeys);
         this.callbacks.forEach(cb => cb(e, normalizedKeys, hotkey.element));
         observer.next(e);
       };
       const dispose = this.eventManager.addEventListener(mergedOptions.element, event, handler);
       // teardown logic
       return () => {
-        this.hotkeys.delete(hotkeyId);
+        this.hotkeys.delete(normalizedKeys);
         dispose();
       };
     });
