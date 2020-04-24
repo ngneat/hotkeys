@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+
 import { hostPlatform } from './utils/platform';
 
 const symbols = {
@@ -13,18 +14,17 @@ const symbols = {
   enter: '&#8996;'
 };
 
-
 const appleSymbols = {
   meta: '&#8984;',
   altleft: '&#8997;',
   control: '&#8963;',
-  escape: '&#9099;',
+  escape: '&#9099;'
 };
 
 const pcSymbols = {
   control: 'Ctrl',
   altleft: 'Alt',
-  escape: 'Esc',
+  escape: 'Esc'
 };
 
 @Pipe({
@@ -37,7 +37,7 @@ export class HotkeysShortcutPipe implements PipeTransform {
     this.symbols = this.getPlatformSymbols(platform);
   }
 
-  transform(value: string): any {
+  transform(value: string, separator = ' + '): any {
     if (!value) {
       return '';
     }
@@ -45,10 +45,10 @@ export class HotkeysShortcutPipe implements PipeTransform {
       .split('.')
       .map(c => c.toLowerCase())
       .map(c => this.symbols[c] || c)
-      .join(' ');
+      .join(separator);
   }
 
   private getPlatformSymbols(platform): any {
-    return platform === 'apple' ? {...symbols, ...appleSymbols} : {...symbols, ...pcSymbols};
+    return platform === 'apple' ? { ...symbols, ...appleSymbols } : { ...symbols, ...pcSymbols };
   }
 }
