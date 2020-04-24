@@ -34,7 +34,7 @@ export class HotkeysService {
   };
   private callbacks: HotkeyCallback[] = [];
 
-  constructor(private eventManager: EventManager, @Inject(DOCUMENT) private document: Document) {}
+  constructor(private eventManager: EventManager, @Inject(DOCUMENT) private document) {}
 
   getHotkeys(): Hotkey[] {
     return Array.from(this.hotkeys.values()).map(h => ({ ...h }));
