@@ -40,4 +40,30 @@
   .hotkeys-help-shortcut-keys {
     text-align: right;
   }
+
+  .hotkeys-help-header {
+    font-size: 1.25em;
+    margin-bottom: 1.25em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .hotkeys-help-header .hotkeys-help-header-title {
+    line-height: 1.5;
+  }
+
+  .hotkeys-help-header .hotkeys-help-header-dismiss-button {
+    border: 1px solid #d1d5da;
+    padding: 0.5em 0.75em;
+    font-weight: bold;
+  }
+
+  .hotkeys-help-header .hotkeys-help-header-dismiss-button:hover {
+    background-color: #c6cbd1;
+  }
+
+  .hotkeys-help-header .hotkeys-help-header-dismiss-button:focus {
+    outline: none;
+  }
 }
