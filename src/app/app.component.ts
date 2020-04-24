@@ -37,7 +37,7 @@ export class AppComponent implements AfterViewInit {
 
     this.hotkeys
       .addShortcut({
-        keys: 'ctrl.f',
+        keys: 'control.f',
         element: this.container.nativeElement,
         description: 'Find element',
         group: 'Edit'
@@ -46,7 +46,7 @@ export class AppComponent implements AfterViewInit {
 
     this.hotkeys
       .addShortcut({
-        keys: 'ctrl.r',
+        keys: 'control.r',
         element: this.container.nativeElement,
         description: 'Replace element',
         group: 'Edit'
