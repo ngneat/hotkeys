@@ -1,13 +1,18 @@
-<table class="hotkeys-help" cellspacing="0" width="100%" *ngFor="let hotkeyGroup of hotkeys">
+<div *ngIf="headerVisible" class="hotkeys-help-header">
+  <span class="hotkeys-help-header-title">{{title}}</span>
+  <button class="hotkeys-help-header-dismiss-button" (click)="handleDismiss()">X</button>
+</div>
+
+<table class="hotkeys-table-help" cellspacing="0" width="100%" *ngFor="let hotkeyGroup of hotkeys">
   <thead *ngIf="hotkeyGroup.group">
     <tr>
-      <th class="hotkeys-help-group" colspan="2">{{ hotkeyGroup.group }}</th>
+      <th class="hotkeys-table-help-group" colspan="2">{{ hotkeyGroup.group }}</th>
     </tr>
   </thead>
   <tbody>
-    <tr class="hotkeys-help-shortcut" *ngFor="let hotkey of hotkeyGroup.hotkeys">
-      <td class="hotkeys-help-shortcut-description" width="75%">{{ hotkey.description }}</td>
-      <td class="hotkeys-help-shortcut-keys" width="25%">
+    <tr class="hotkeys-table-help-shortcut" *ngFor="let hotkey of hotkeyGroup.hotkeys">
+      <td class="hotkeys-table-help-shortcut-description" width="75%">{{ hotkey.description }}</td>
+      <td class="hotkeys-table-help-shortcut-keys" width="25%">
         <kbd [innerHTML]="hotkey.keys | hotkeysShortcut"></kbd>
       </td>
     </tr>

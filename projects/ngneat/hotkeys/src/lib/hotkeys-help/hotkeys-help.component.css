@@ -1,36 +1,63 @@
-.hotkeys-help {
+.hotkeys-help-header {
+  font-size: 1.25em;
+    margin-bottom: 1.25em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.hotkeys-help-header .hotkeys-help-header-title {
+  line-height: 1.5;
+}
+
+.hotkeys-help-header .hotkeys-help-header-dismiss-button {
+  border: 1px solid lightgray;
+  padding: 0.5em 0.75em;
+  font-weight: bold;
+  border-radius: 3px;
+}
+
+.hotkeys-help-header .hotkeys-help-header-dismiss:hover {
+  background-color: lightgray;
+}
+
+.hotkeys-help-header .hotkeys-help-header-dismiss:focus {
+  outline: none;
+}
+
+.hotkeys-table-help {
   border: 1px lightgray solid;
   margin-bottom: 1em;
   color: #1e1e1e;
   border-radius: 4px;
 }
 
-.hotkeys-help .hotkeys-help-group {
+.hotkeys-table-help .hotkeys-table-help-group {
   height: 2.5em;
   background-color: #f1f1f1;
   border-bottom: 1px lightgray solid;
   border-radius: 4px 4px 0 0;
 }
 
-.hotkeys-help .hotkeys-help-shortcut td {
+.hotkeys-table-help .hotkeys-table-help-shortcut td {
   height: 2.5em;
   border-bottom: 1px lightgray solid;
 }
 
-.hotkeys-help .hotkeys-help-shortcut:last-child td {
+.hotkeys-table-help .hotkeys-table-help-shortcut:last-child td {
   border-bottom: none;
 }
 
-.hotkeys-help-shortcut .hotkeys-help-shortcut-description {
+.hotkeys-table-help-shortcut .hotkeys-table-help-shortcut-description {
   padding-left: 0.5em;
 }
 
-.hotkeys-help-shortcut .hotkeys-help-shortcut-keys {
+.hotkeys-table-help-shortcut .hotkeys-table-help-shortcut-keys {
   font-family: monospace;
   text-align: center;
 }
 
-.hotkeys-help-shortcut .hotkeys-help-shortcut-keys kbd {
+.hotkeys-table-help-shortcut .hotkeys-table-help-shortcut-keys kbd {
   padding: 0.125em 0.5em;
   border: 1px solid #c5c5c5;
   border-radius: 3px;
