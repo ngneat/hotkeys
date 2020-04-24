@@ -21,7 +21,7 @@ export class HotkeysDirective implements OnChanges, OnDestroy {
 
   @Input() hotkeys: string;
   @Input() hotkeysGroup: string;
-  @Input() hotkeysOptions: Options;
+  @Input() hotkeysOptions: Partial<Options>;
   @Input() hotkeysDescription: string;
 
   @Output()
