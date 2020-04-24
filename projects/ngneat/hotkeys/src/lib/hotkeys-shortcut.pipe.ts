@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-
 import { hostPlatform } from './utils/platform';
 
 const symbols = {

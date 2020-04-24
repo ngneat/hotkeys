@@ -14,13 +14,14 @@ interface Options {
   preventDefault: boolean;
 }
 
-export type HotkeyGroup = { group: string; hotkeys: { keys: string; description: string }[] };
+export interface HotkeyGroup {
+  group: string;
+  hotkeys: { keys: string; description: string }[];
+}
 export type Hotkey = Partial<Options> & { keys: string };
-export type HotkeyCallback = (event: KeyboardEvent, keys: string, target: HTMLElement) => any;
+export type HotkeyCallback = (event: KeyboardEvent, keys: string, target: HTMLElement) => void;
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class HotkeysService {
   private readonly hotkeys = new Map<string, Hotkey>();
   private readonly defaults: Options = {
@@ -42,26 +43,31 @@ export class HotkeysService {
   getShortcuts(): HotkeyGroup[] {
     const hotkeys = Array.from(this.hotkeys.values());
     const groups: HotkeyGroup[] = [];
+
     for (const hotkey of hotkeys) {
       if (!hotkey.showInHelpMenu) {
         continue;
       }
+
       let group = groups.find(g => g.group === hotkey.group);
       if (!group) {
         group = { group: hotkey.group, hotkeys: [] };
         groups.push(group);
       }
+
       const normalizedKeys = normalizeKeys(hotkey.keys, hostPlatform());
       group.hotkeys.push({ keys: normalizedKeys, description: hotkey.description });
     }
+
     return groups;
   }
 
   addShortcut(options: Hotkey): Observable<KeyboardEvent> {
     const mergedOptions = { ...this.defaults, ...options };
     const normalizedKeys = normalizeKeys(mergedOptions.keys, hostPlatform());
+
     if (this.hotkeys.has(normalizedKeys)) {
-      console.error('duplicated shortcut');
+      console.error('Duplicated shortcut');
       return of(null);
     }
 
@@ -73,12 +79,14 @@ export class HotkeysService {
         if (mergedOptions.preventDefault) {
           e.preventDefault();
         }
+
         const hotkey = this.hotkeys.get(normalizedKeys);
         this.callbacks.forEach(cb => cb(e, normalizedKeys, hotkey.element));
         observer.next(e);
       };
+
       const dispose = this.eventManager.addEventListener(mergedOptions.element, event, handler);
-      // teardown logic
+
       return () => {
         this.hotkeys.delete(normalizedKeys);
         dispose();
@@ -88,6 +96,7 @@ export class HotkeysService {
 
   onShortcut(callback: HotkeyCallback): () => void {
     this.callbacks.push(callback);
+
     return () => (this.callbacks = this.callbacks.filter(cb => cb !== callback));
   }
 
@@ -96,8 +105,8 @@ export class HotkeysService {
       const skipMenu =
         /^(input|textarea)$/i.test(document.activeElement.nodeName) || (e.target as HTMLElement).isContentEditable;
 
-      if (!skipMenu) {
-        this.hotkeys.size && openHelpModalFn();
+      if (!skipMenu && this.hotkeys.size) {
+        openHelpModalFn();
       }
     });
   }

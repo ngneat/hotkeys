@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-
 import { HotkeysService } from '../hotkeys.service';
 
 @Component({
@@ -7,8 +6,7 @@ import { HotkeysService } from '../hotkeys.service';
   styleUrls: ['./hotkeys-help.component.scss']
 })
 export class HotkeysHelpComponent {
-  @Input() title = 'Shortcuts';
-  @Input() headerVisible = true;
+  @Input() title = 'Available Shortcuts';
   @Output() dimiss = new EventEmitter();
   hotkeys = this.hotkeysService.getShortcuts();
 

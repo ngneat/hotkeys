@@ -2,7 +2,6 @@ import { TestBed } from '@angular/core/testing';
 import { HotkeysDirective, HotkeysService } from '@ngneat/hotkeys';
 import { createDirectiveFactory, SpectatorDirective } from '@ngneat/spectator';
 
-
 describe('Directive: Hotkeys', () => {
   let spectator: SpectatorDirective<HotkeysDirective>;
   const createDirective = createDirectiveFactory(HotkeysDirective);
@@ -49,7 +48,9 @@ describe('Directive: Hotkeys', () => {
   });
 
   it('should register proper options', () => {
-    spectator = createDirective(`<div [hotkeys]="'a'" [hotkeysOptions]="{trigger: 'keyup', showInHelpMenu: false, preventDefault: false}"></div>`);
+    spectator = createDirective(
+      `<div [hotkeys]="'a'" [hotkeysOptions]="{trigger: 'keyup', showInHelpMenu: false, preventDefault: false}"></div>`
+    );
     spectator.fixture.detectChanges();
     const provider = TestBed.inject(HotkeysService);
     const hotkey = provider.getHotkeys()[0];
@@ -65,5 +66,4 @@ describe('Directive: Hotkeys', () => {
     const hotkey = provider.getHotkeys()[0];
     expect(hotkey.trigger).toBe('keyup');
   });
-
 });

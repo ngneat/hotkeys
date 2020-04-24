@@ -47,23 +47,20 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
   }
 
-  .hotkeys-help-header .hotkeys-help-header-title {
+  .hotkeys-help-header-title {
     line-height: 1.5;
   }
 
-  .hotkeys-help-header .hotkeys-help-header-dismiss-button {
-    border: 1px solid #d1d5da;
-    padding: 0.5em 0.75em;
-    font-weight: bold;
-  }
-
-  .hotkeys-help-header .hotkeys-help-header-dismiss-button:hover {
-    background-color: #c6cbd1;
-  }
-
-  .hotkeys-help-header .hotkeys-help-header-dismiss-button:focus {
-    outline: none;
+  .hotkeys-help-header-dismiss-button {
+    border: none;
+    font-size: 18px;
+    color: #9e9e9e;
+    cursor: pointer;
+    &:focus {
+      outline: none;
+    }
   }
 }

@@ -1,6 +1,6 @@
-<div *ngIf="headerVisible" class="hotkeys-help-header">
-  <span class="hotkeys-help-header-title">{{title}}</span>
-  <button class="hotkeys-help-header-dismiss-button" (click)="handleDismiss()">X</button>
+<div *ngIf="title" class="hotkeys-help-header">
+  <span class="hotkeys-help-header-title">{{ title }}</span>
+  <button class="hotkeys-help-header-dismiss-button" (click)="handleDismiss()">&#10005;</button>
 </div>
 
 <table class="hotkeys-table-help" cellspacing="0" width="100%" *ngFor="let hotkeyGroup of hotkeys">
