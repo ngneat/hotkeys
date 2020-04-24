@@ -24,10 +24,10 @@ export type HotkeyCallback = (event: KeyboardEvent, keys: string, target: HTMLEl
 export class HotkeysService {
   private readonly hotkeys = new Map<string, Hotkey>();
   private readonly defaults: Options = {
-    group: '',
     trigger: 'keydown',
     element: this.document.documentElement,
-    description: '',
+    group: undefined,
+    description: undefined,
     showInHelpMenu: true,
     preventDefault: true
   };
@@ -36,21 +36,23 @@ export class HotkeysService {
   constructor(private eventManager: EventManager, @Inject(DOCUMENT) private document: Document) {}
 
   getHotkeys(): Hotkey[] {
-   return Array.from(this.hotkeys.values()).map(h => ({...h}));
+    return Array.from(this.hotkeys.values()).map(h => ({ ...h }));
   }
 
   getShortcuts(): HotkeyGroup[] {
     const hotkeys = Array.from(this.hotkeys.values());
     const groups: HotkeyGroup[] = [];
     for (const hotkey of hotkeys) {
-      if (!hotkey.showInHelpMenu) { continue; }
+      if (!hotkey.showInHelpMenu) {
+        continue;
+      }
       let group = groups.find(g => g.group === hotkey.group);
       if (!group) {
         group = { group: hotkey.group, hotkeys: [] };
         groups.push(group);
       }
       const normalizedKeys = normalizeKeys(hotkey.keys, hostPlatform());
-      group.hotkeys.push({ keys: normalizedKeys, description: hotkey.description});
+      group.hotkeys.push({ keys: normalizedKeys, description: hotkey.description });
     }
     return groups;
   }

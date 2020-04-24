@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, ElementRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { HotkeysHelpComponent, HotkeysService } from '@ngneat/hotkeys';
 
@@ -8,58 +8,51 @@ import { HotkeysHelpComponent, HotkeysService } from '@ngneat/hotkeys';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements AfterViewInit {
-  @ViewChild('container') container;
+  @ViewChild('input') input: ElementRef<HTMLElement>;
+  @ViewChild('input2') input2: ElementRef<HTMLElement>;
 
-  constructor(private hotkeys: HotkeysService, private dialog: MatDialog) {
-    /*     fromEvent(document, 'keydown').subscribe(e => console.log(e)); */
-  }
+  constructor(private hotkeys: HotkeysService, private dialog: MatDialog) {}
 
   ngAfterViewInit(): void {
+    const unsubscribe = this.hotkeys.onShortcut((event, keys, t) => console.log(keys));
 
-    const unsubscribe = this.hotkeys.onShortcut((e, k, t) => console.log('callback', k));
-    // unsubscribe();
-
-    const helpFcn: () => void = () => {
+    this.hotkeys.registerHelpModal(() => {
       this.dialog.open(HotkeysHelpComponent, { width: '500px' });
-    };
-
-    this.hotkeys.registerHelpModal(helpFcn);
+    });
 
     this.hotkeys
       .addShortcut({
-        keys: 'escape',
-        trigger: 'keydown',
-        element: this.container.nativeElement,
-        description: 'Quit document',
-        group: 'File'
+        keys: 'meta.g',
+        element: this.input.nativeElement,
+        description: 'Go to Code',
+        group: 'Repositories'
       })
-      .subscribe(e => console.log('Quit hotkey', e));
+      .subscribe(e => console.log('Go to Code', e));
 
     this.hotkeys
       .addShortcut({
-        keys: 'ctrl.f',
-        element: this.container.nativeElement,
-        description: 'Find element',
-        group: 'Edit'
+        keys: 'control.f',
+        element: this.input2.nativeElement,
+        description: 'Go to Issues',
+        group: 'Repositories'
       })
-      .subscribe(e => console.log('Find hotkey', e));
+      .subscribe(e => console.log('Go to Issues', e));
 
     this.hotkeys
       .addShortcut({
-        keys: 'ctrl.r',
-        element: this.container.nativeElement,
-        description: 'Replace element',
-        group: 'Edit'
+        keys: 'shift.r',
+        description: 'Jump to line',
+        group: 'Source code browsing'
       })
-      .subscribe(e => console.log('Replace hotkey', e));
+      .subscribe(e => console.log('Source code browsing', e));
 
     this.hotkeys
       .addShortcut({
-        keys: 'backspace',
-        trigger: 'keyup',
-        description: 'Copy'
+        keys: 'meta.k',
+        description: 'Go to notifications',
+        group: 'Site-wide shortcuts'
       })
-      .subscribe(e => console.log('Copy hotkey', e));
+      .subscribe(e => console.log('Go to notifications', e));
   }
 
   handleHotkey(e: KeyboardEvent) {
