@@ -14,7 +14,7 @@
 
 > Power Up Your App with Hotkeys!
 
-A declarative library for handling hotkeys in Angular applications
+A declarative library for handling hotkeys in Angular applications.
 
 Web apps are getting closer and closer to be desktop-class applications. With this in mind, it makes sense to add hotkeys for those power users that are looking to navigate their favorite websites using hotkeys just as they do on their regular native apps. To help you have a better experience we develop Hotkeys.
 
@@ -67,8 +67,11 @@ Additionally, the directive accepts three more `input`s:
 For example:
 
 ```html
-<input hotkeys="meta.a" hotkeysGroup="File" hotkeysDescription="Create new document" [hotkeysOptions]="{ showInHelpMenu:
-false }" (hotkey)="handleHotkey($event)"
+<input hotkeys="meta.a" 
+       hotkeysGroup="File" 
+       hotkeysDescription="Create new document" 
+       [hotkeysOptions]="{ showInHelpMenu: false }" 
+       (hotkey)="handleHotkey($event)"
 ```
 
 ## Hotkeys Service
