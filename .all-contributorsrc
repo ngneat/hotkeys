@@ -9,6 +9,18 @@
   "imageSize": 100,
   "commit": true,
   "commitConvention": "angular",
-  "contributors": [],
+  "contributors": [
+    {
+      "login": "vilacha",
+      "name": "vilacha",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/48308698?v=4",
+      "profile": "https://github.com/vilacha",
+      "contributions": [
+        "code",
+        "content",
+        "doc"
+      ]
+    }
+  ],
   "contributorsPerLine": 7
 }
