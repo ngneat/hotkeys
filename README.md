@@ -66,13 +66,9 @@ Additionally, the directive accepts three more `input`s:
 
 For example:
 
-```ts
-  <input
-  hotkeys="meta.a"
-  (hotkey)="handleHotkey($event)"
-  hotkeysGroup="File"
-  hotkeysDescription="Create new document"
-  [hotkeysOptions]="{ preventDefault: false, trigger: 'keyup', showInHelpMenu: false }"
+```html
+<input hotkeys="meta.a" hotkeysGroup="File" hotkeysDescription="Create new document" [hotkeysOptions]="{ showInHelpMenu:
+false }" (hotkey)="handleHotkey($event)"
 ```
 
 ## Hotkeys Service
@@ -150,21 +146,11 @@ export class AppComponent implements AfterViewInit {
 
 It accepts a second input that allows defining the hotkey that should open the dialog. The default shortcut is `Shift + ?`. Here's how `HotkeysHelpComponent` looks like:
 
-![image info](help_screenshot.png)
+<p align="center">
+ <img width="50%" height="50%" src="./help_screenshot.png">
+</p>
 
-You can also provide a custom component. To help you with that, the service exposes the `getShortcuts` method:
-
-`getShortcuts` - Returns the shortcuts to be displayed in a help screen.
-
-```ts
-this.keys = [{
-  group: string;
-  hotkeys: {
-    keys: string;
-    description: string;
-  }
-}]
-```
+You can also provide a custom component. To help you with that, the service exposes the `getShortcuts` method.
 
 ## Hotkeys Shortcut Pipe
 
@@ -176,7 +162,7 @@ The `hotkeysShortcut` formats the shortcuts when presenting them in a custom hel
 </div>
 ```
 
-The pipe accepts and additional parameter the way key combinations are separated. By default, the separator is " + ". In the following example, a "-" is used as separator.
+The pipe accepts and additional parameter the way key combinations are separated. By default, the separator is `+`. In the following example, a `-` is used as separator.
 
 ```html
 <div class="help-dialog-shortcut-key">
