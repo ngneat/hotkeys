@@ -266,6 +266,14 @@ There is also available a @Pipe, `hotkeysShortcut`, to help you format your shor
   <kbd [innerHTML]="hotkey.keys | hotkeysShortcut"></kbd>
 </div>
 ```
+The pipe accepts and additional parameter the way key combinations are separated. By default, the separator is " + ". In the next example, a "-" is used as separator.
+
+```html
+<div class="help-dialog-shortcut-key">
+  <kbd [innerHTML]="hotkey.keys | hotkeysShortcut : '-'"></kbd>
+</div>
+```
+
 
 ## Hotkeys Help Component
 There is also available a @Component, `HotkeysHelpComponent`, which offers a help view of the collection of visible shortcuts. It can be easily used with Angular Material Dialog.
