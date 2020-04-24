@@ -1,20 +1,18 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { HotkeyGroup, HotkeysService } from '../hotkeys.service';
+import { HotkeysService } from '../hotkeys.service';
 
 @Component({
   templateUrl: './hotkeys-help.component.html',
-  styleUrls: ['./hotkeys-help.component.css']
+  styleUrls: ['./hotkeys-help.component.scss']
 })
 export class HotkeysHelpComponent {
   @Input() title = 'Shortcuts';
   @Input() headerVisible = true;
   @Output() dimiss = new EventEmitter();
-  hotkeys: HotkeyGroup[];
+  hotkeys = this.hotkeysService.getShortcuts();
 
-  constructor(private hotkeysService: HotkeysService) {
-    this.hotkeys = this.hotkeysService.getShortcuts();
-  }
+  constructor(private hotkeysService: HotkeysService) {}
 
   handleDismiss() {
     this.dimiss.next();
