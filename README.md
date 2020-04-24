@@ -44,17 +44,15 @@ Web apps are getting closer and closer to be desktop-class applications. With th
 
 ## Usage
 
-Few libraries are as easy to use as hotkeys. The first step is to add `HotkeysModule` in your `AppModule`. 
-
-Hotkeys injects a service, a directive, and a component, application-wide, so there's no need to import Hotkeys in each of your submodules.
+The first step is to add `HotkeysModule` in your `AppModule`. 
 
 Once you've done this, there are two ways to start adding shortcuts to your application.
 
 1. Using a directive directly on your target view.
-2. Using a global service code-behind..
+2. Using a global service code-behind.
 
 ## Hotkeys Directive
-Using the directive only requires adding `[hotkeys]` to a view element and pass in a shortcut. As you can see in the example down below, shortcuts are formatted as a string listing the keys separated by a period character.
+Using the directive only requires importing `HotkeysModule` and adding `[hotkeys]` to a template element and pass in a shortcut. As you can see in the example down below, shortcuts are formatted as a string listing the keys separated by a period character.
 
 ```html
 <div [hotkeys]="'meta.a'" (hotkey)="handleHotkey($event)" tabindex="1">
@@ -62,17 +60,17 @@ Using the directive only requires adding `[hotkeys]` to a view element and pass 
 </div
 ```
 
-> Note: Hotkeys takes care of transforming macOS specific keys to Linux and Windows and vice-versa.
+> Note: Hotkeys takes care of transforming keys from macOS to Linux and Windows and vice-versa.
 
-The directive exposes an output event `(hotkey)` that relays the keyboard event when the hotkey is triggered.
+The directive exposes an output event `(hotkey)` that relays the keyboard event to the underlaying controller.
 
-Addionatelly, the directive accepts three more input parameters.
+Additionally, the directive accepts three more input parameters.
 
 * `hotkeysGroup` - define a group name.
 * `hotkeysDescription` - add a description.
 * `hotkeysOptions` - set more specific options.
 
-These options are the following properties.
+`hotkeysOptions` accepts a subset of the following object.
 
 ```ts
 interface Options {
@@ -81,14 +79,39 @@ interface Options {
   preventDefault: boolean; // whether to prevent default behavior in the target element. It's true by default.
 }
 ```
+For example,
+
+```ts
+  <div
+  [hotkeys]="'meta.a'"
+  (hotkey)="handleHotkey($event)"
+  [hotkeysGroup]="'File'"
+  [hotkeysDescription]="'Create new document'"
+  [hotkeysOptions]="{preventDefault: false, trigger: 'keyup', showInHelpMenu: false}">
+    NgNeat Hotkeys!
+  </div>
+
+```
 
 ## Hotkeys Service
 This is a global service that can be injected into any component.
 ```ts
-  constructor(private hotkeys: HotkeysService) {}
+import { Component} from '@angular/core';
+import { HotkeysService } from '@ngneat/hotkeys';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+
+  constructor(private hotkeys: HotkeysService) {
+  }
+}
 ```
 
-It not only provides a way to add hotkeys code behind but also other goodies.
+`HotkeyService` exposes the next functionality.
 
 * `addShortcut` - add a new shortcut
 ```ts
@@ -121,13 +144,93 @@ const unsubscribe = this.hotkeys.onShortcut(
 
 * `registerHelpModal` - display a help dialog listing all visible hotkeys
 
-```ts
-const helpFcn: () => void = () => {
-  this.dialog.open(HotkeysHelpComponent, { width: '500px' });
-};
-this.hotkeys.registerHelpModal(helpFcn);
+```html
+<!-- app.component.html  -->
+<div #container style="width: 100%; height: 100vh;" tabindex="0">
+  <div
+  [hotkeys]="'meta.a'"
+  (hotkey)="handleHotkey($event)"
+  [hotkeysGroup]="'File'"
+  [hotkeysDescription]="'Create new document'"
+  [hotkeysOptions]="{preventDefault: false, trigger: 'keyup', showInHelpMenu: false}">
+    NgNeat Hotkeys!
+  </div>
+</div>
+
 ```
-It accepts a second input that allows to define the "show help" hotkey.
+
+```ts
+// app.component.ts
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { HotkeysHelpComponent, HotkeysService } from '@ngneat/hotkeys';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent implements AfterViewInit {
+  @ViewChild('container') container;
+
+  constructor(private hotkeys: HotkeysService, private dialog: MatDialog) {
+    /*     fromEvent(document, 'keydown').subscribe(e => console.log(e)); */
+  }
+
+  ngAfterViewInit(): void {
+    // subscribe help modal
+    const helpFcn: () => void = () => {
+      this.dialog.open(HotkeysHelpComponent, { width: '500px' });
+    };
+    this.hotkeys.registerHelpModal(helpFcn);
+
+    // add hotkeys
+    this.hotkeys
+      .addShortcut({
+        keys: 'escape',
+        trigger: 'keydown',
+        element: this.container.nativeElement,
+        description: 'Quit document',
+        group: 'File'
+      })
+      .subscribe(e => console.log('Quit hotkey', e));
+
+    this.hotkeys
+      .addShortcut({
+        keys: 'ctrl.f',
+        element: this.container.nativeElement,
+        description: 'Find element',
+        group: 'Edit'
+      })
+      .subscribe(e => console.log('Find hotkey', e));
+
+    this.hotkeys
+      .addShortcut({
+        keys: 'ctrl.r',
+        element: this.container.nativeElement,
+        description: 'Replace element',
+        group: 'Edit'
+      })
+      .subscribe(e => console.log('Replace hotkey', e));
+
+    this.hotkeys
+      .addShortcut({
+        keys: 'backspace',
+        trigger: 'keyup',
+        description: 'Copy'
+      })
+      .subscribe(e => console.log('Copy hotkey', e));
+  }
+
+  handleHotkey(e: KeyboardEvent) {
+    console.log('New document hotkey', e);
+  }
+}
+```
+It accepts a second input that allows to define the "show help" hotkey. The default shortcut is Shift + ?.
+
+![image info](./readme/help_screenshot.png)
+
 
 * `getHotkeys` - retrieve all defined hotkeys application-wide.
 
