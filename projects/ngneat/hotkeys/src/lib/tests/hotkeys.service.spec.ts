@@ -1,12 +1,13 @@
 /* tslint:disable:no-unused-variable */
-
+import { DOCUMENT } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
 import { Hotkey, HotkeysService } from '@ngneat/hotkeys';
-import { DOCUMENT } from '@angular/common';
-import * as Platform from '../utils/platform';
-import createSpy = jasmine.createSpy;
 import { createServiceFactory, SpectatorService } from '@ngneat/spectator';
 
+import * as Platform from '../utils/platform';
+
+
+import createSpy = jasmine.createSpy;
 // TODO: Use Spectator to trigger keyboard events
 describe('Service: Hotkeys', () => {
 
@@ -73,8 +74,8 @@ describe('Service: Hotkeys', () => {
         showInHelpMenu: true,
         keys: 'a',
         trigger: 'keydown',
-        group: '',
-        description: '',
+        group: undefined,
+        description: undefined,
         preventDefault: true}
     );
   });
@@ -125,20 +126,3 @@ function fakeBodyKeyboardPress(key: string, type = 'keydown') {
   const html = TestBed.inject(DOCUMENT).body;
   html.dispatchEvent(new KeyboardEvent(type, {key}));
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
