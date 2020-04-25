@@ -8,7 +8,7 @@
 [![commitizen](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=flat-square)]()
 [![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)]()
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
-[![All Contributors](https://img.shields.io/badge/all_contributors-0-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 [![ngneat](https://img.shields.io/badge/@-ngneat-383636?style=flat-square&labelColor=8f68d4)](https://github.com/ngneat/)
 [![spectator](https://img.shields.io/badge/tested%20with-spectator-2196F3.svg?style=flat-square)]()
 
@@ -62,15 +62,14 @@ Additionally, the directive accepts three more `input`s:
 
 - `hotkeysGroup` - define the group name.
 - `hotkeysDescription` - add a description.
-- `hotkeysOptions`: See [Options](#options)
+- `hotkeysOptions` - See [Options](#options)
 
 For example:
 
 ```html
-<input hotkeys="meta.a" 
+<input hotkeys="meta.n" 
        hotkeysGroup="File" 
-       hotkeysDescription="Create new document" 
-       [hotkeysOptions]="{ showInHelpMenu: false }" 
+       hotkeysDescription="New Document" 
        (hotkey)="handleHotkey($event)"
 ```
 
@@ -116,7 +115,8 @@ interface Options {
 }
 ```
 
-#### `onShortcut` - listen to any registered hotkey. For example:
+#### `onShortcut`
+Listen to any registered hotkey. For example:
 
 ```ts
 const unsubscribe = this.hotkeys.onShortcut((event, key, target) => console.log('callback', key));
@@ -125,7 +125,8 @@ const unsubscribe = this.hotkeys.onShortcut((event, key, target) => console.log(
 unsubscribe();
 ```
 
-#### `registerHelpModal` - display a help dialog listing all visible hotkeys:
+#### `registerHelpModal`
+Display a help dialog listing all visible hotkeys:
 
 ```ts
 import { MatDialog } from '@angular/material/dialog';
@@ -173,7 +174,7 @@ The pipe accepts and additional parameter the way key combinations are separated
 </div>
 ```
 
-That's all for now! Make sure to check out the `playground` inside the `src` folder.
+That's all for now! Make sure to check out the `playground` inside the `src` [folder](https://github.com/ngneat/hotkeys/tree/master/src/app).
 
 ## FAQ
 
