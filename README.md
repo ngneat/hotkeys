@@ -4,6 +4,7 @@
 
 <br />
 
+![Test](https://github.com/ngneat/hotkeys/workflows/Test/badge.svg)
 [![MIT](https://img.shields.io/packagist/l/doctrine/orm.svg?style=flat-square)]()
 [![commitizen](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=flat-square)]()
 [![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)]()
