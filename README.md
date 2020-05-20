@@ -13,7 +13,7 @@
 [![ngneat](https://img.shields.io/badge/@-ngneat-383636?style=flat-square&labelColor=8f68d4)](https://github.com/ngneat/)
 [![spectator](https://img.shields.io/badge/tested%20with-spectator-2196F3.svg?style=flat-square)]()
 
-> Power Up Your App with Hotkeys!
+> Shortcut like a pro!
 
 A declarative library for handling hotkeys in Angular applications.
 
