@@ -143,7 +143,8 @@ export class AppComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.hotkeys.registerHelpModal(() => {
-      this.dialog.open(HotkeysHelpComponent, { width: '500px' });
+      const ref = this.dialog.open(HotkeysHelpComponent, { width: '500px' });
+      ref.componentInstance.dimiss.subscribe(() => ref.close());
     });
   }
 }
