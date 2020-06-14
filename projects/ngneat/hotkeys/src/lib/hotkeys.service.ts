@@ -4,6 +4,7 @@ import { EventManager } from '@angular/platform-browser';
 import { Observable, of } from 'rxjs';
 
 import { hostPlatform, normalizeKeys } from './utils/platform';
+import { coerceArray } from './utils/array';
 
 interface Options {
   group: string;
@@ -91,6 +92,17 @@ export class HotkeysService {
         this.hotkeys.delete(normalizedKeys);
         dispose();
       };
+    });
+  }
+
+  removeShortcuts(hotkeys: string | string[]): void {
+    const coercedHotkeys = coerceArray(hotkeys).map(hotkey => normalizeKeys(hotkey, hostPlatform()));
+    coercedHotkeys.forEach(hotkey => {
+      if (!this.hotkeys.has(hotkey)) {
+        console.warn(`Hotkey ${hotkey} not found`);
+        return;
+      }
+      this.hotkeys.delete(hotkey);
     });
   }
 
