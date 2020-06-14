@@ -18,6 +18,18 @@ describe('Service: Hotkeys', () => {
     expect(spectator.service.getHotkeys().length).toBe(1);
   });
 
+  it('should remove shortcut', () => {
+    spectator.service.addShortcut({ keys: 'a' });
+    spectator.service.addShortcut({ keys: 'b' });
+    spectator.service.addShortcut({ keys: 'c' });
+    spectator.service.removeShortcuts([{ keys: 'a' }, { keys: 'b' }]);
+    spectator.service.removeShortcuts({ keys: 'c' });
+    expect(spectator.service.getHotkeys().length).toBe(0);
+    const spy = spyOn(console, 'warn');
+    spectator.service.removeShortcuts({ keys: 'c' });
+    expect(spy).toHaveBeenCalled();
+  });
+
   it('should listen to keydown', () => {
     const spyFcn = createSpy('subscribe', e => {});
     spectator.service.addShortcut({ keys: 'a' }).subscribe(spyFcn);

@@ -158,6 +158,17 @@ It accepts a second input that allows defining the hotkey that should open the d
 
 You can also provide a custom component. To help you with that, the service exposes the `getShortcuts` method.
 
+#### `removeShortcuts`
+
+Remove previously registered shortcuts.
+
+```ts
+// Remove a single shortcut
+this.hotkeys.removeShortcuts({ keys: 'meta.a' });
+// Remove several shortcuts
+this.hotkeys.removeShortcuts([{ keys: 'meta.1' }, { keys: 'meta.2' }]);
+```
+
 ## Hotkeys Shortcut Pipe
 
 The `hotkeysShortcut` formats the shortcuts when presenting them in a custom help screen:
