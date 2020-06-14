@@ -21,10 +21,10 @@ Web apps are getting closer and closer to be desktop-class applications. With th
 
 ## Features
 
-- ✅ Support Element Scope
-- ✅ Support Global Listeners
-- ✅ Platform Agnostic
-- ✅ Hotkeys Cheatsheet
+- ✅  Support Element Scope
+- ✅  Support Global Listeners
+- ✅  Platform Agnostic
+- ✅  Hotkeys Cheatsheet
 
 ## Table of Contents
 
@@ -216,6 +216,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="http://carlosvilacha.com"><img src="https://avatars3.githubusercontent.com/u/1565222?v=4" width="100px;" alt=""/><br /><sub><b>Carlos Vilacha</b></sub></a><br /><a href="https://github.com/@ngneat/hotkeys/commits?author=flatstadt" title="Code">💻</a> <a href="#content-flatstadt" title="Content">🖋</a> <a href="https://github.com/@ngneat/hotkeys/commits?author=flatstadt" title="Documentation">📖</a></td>
     <td align="center"><a href="https://www.netbasal.com"><img src="https://avatars1.githubusercontent.com/u/6745730?v=4" width="100px;" alt=""/><br /><sub><b>Netanel Basal</b></sub></a><br /><a href="#blog-NetanelBasal" title="Blogposts">📝</a> <a href="https://github.com/@ngneat/hotkeys/commits?author=NetanelBasal" title="Code">💻</a> <a href="https://github.com/@ngneat/hotkeys/commits?author=NetanelBasal" title="Documentation">📖</a> <a href="#ideas-NetanelBasal" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/alvaromartmart"><img src="https://avatars1.githubusercontent.com/u/18287793?s=120&v=4" width="100px;" alt=""/><br /><sub><b>Álvaro Martínez</b></sub></a><br /><a href="https://github.com/@ngneat/hotkeys/commits?author=alvaromartmart" title="Code">💻</a> <a href="https://github.com/@ngneat/hotkeys/commits?author=alvaromartmart" title="Documentation">📖</a></td>
   </tr>
 </table>
 
