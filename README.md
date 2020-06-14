@@ -164,9 +164,9 @@ Remove previously registered shortcuts.
 
 ```ts
 // Remove a single shortcut
-this.hotkeys.removeShortcuts({ keys: 'meta.a' });
+this.hotkeys.removeShortcuts('meta.a');
 // Remove several shortcuts
-this.hotkeys.removeShortcuts([{ keys: 'meta.1' }, { keys: 'meta.2' }]);
+this.hotkeys.removeShortcuts(['meta.1', 'meta.2']);
 ```
 
 ## Hotkeys Shortcut Pipe

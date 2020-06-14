@@ -95,16 +95,14 @@ export class HotkeysService {
     });
   }
 
-  removeShortcuts(hotkeys: Hotkey | Hotkey[]): void {
-    const coercedHotkeys = coerceArray(hotkeys);
+  removeShortcuts(hotkeys: string | string[]): void {
+    const coercedHotkeys = coerceArray(hotkeys).map(hotkey => normalizeKeys(hotkey, hostPlatform()));
     coercedHotkeys.forEach(hotkey => {
-      const mergedOptions = { ...this.defaults, ...hotkey };
-      const normalizedKeys = normalizeKeys(mergedOptions.keys, hostPlatform());
-      if (!this.hotkeys.has(normalizedKeys)) {
-        console.warn(`Hotkey ${normalizedKeys} not found`);
+      if (!this.hotkeys.has(hotkey)) {
+        console.warn(`Hotkey ${hotkey} not found`);
         return;
       }
-      this.hotkeys.delete(normalizedKeys);
+      this.hotkeys.delete(hotkey);
     });
   }
 

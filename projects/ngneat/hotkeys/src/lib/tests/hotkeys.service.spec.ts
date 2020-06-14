@@ -19,14 +19,14 @@ describe('Service: Hotkeys', () => {
   });
 
   it('should remove shortcut', () => {
-    spectator.service.addShortcut({ keys: 'a' });
-    spectator.service.addShortcut({ keys: 'b' });
-    spectator.service.addShortcut({ keys: 'c' });
-    spectator.service.removeShortcuts([{ keys: 'a' }, { keys: 'b' }]);
-    spectator.service.removeShortcuts({ keys: 'c' });
+    spectator.service.addShortcut({ keys: 'meta.a' });
+    spectator.service.addShortcut({ keys: 'meta.b' });
+    spectator.service.addShortcut({ keys: 'meta.c' });
+    spectator.service.removeShortcuts(['meta.a', 'meta.b']);
+    spectator.service.removeShortcuts('meta.c');
     expect(spectator.service.getHotkeys().length).toBe(0);
     const spy = spyOn(console, 'warn');
-    spectator.service.removeShortcuts({ keys: 'c' });
+    spectator.service.removeShortcuts('meta.c');
     expect(spy).toHaveBeenCalled();
   });
 
