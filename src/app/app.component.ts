@@ -10,6 +10,7 @@ import { HotkeysHelpComponent, HotkeysService } from '@ngneat/hotkeys';
 export class AppComponent implements AfterViewInit {
   @ViewChild('input') input: ElementRef<HTMLElement>;
   @ViewChild('input2') input2: ElementRef<HTMLElement>;
+  @ViewChild('container') container: ElementRef<HTMLElement>;
 
   constructor(private hotkeys: HotkeysService, private dialog: MatDialog) {}
 
@@ -29,6 +30,8 @@ export class AppComponent implements AfterViewInit {
         keys: 'meta.g',
         element: this.input.nativeElement,
         description: 'Go to Code',
+        allowIn: ['input'],
+        preventDefault: false,
         group: 'Repositories'
       })
       .subscribe(e => console.log('Go to Code', e));

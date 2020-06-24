@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HotkeysDirective, HotkeysService } from '@ngneat/hotkeys';
 import { createDirectiveFactory, SpectatorDirective } from '@ngneat/spectator';
+import createSpy = jasmine.createSpy;
 
 describe('Directive: Hotkeys', () => {
   let spectator: SpectatorDirective<HotkeysDirective>;
@@ -13,6 +14,24 @@ describe('Directive: Hotkeys', () => {
     });
     spectator.dispatchKeyboardEvent(spectator.element, 'keydown', 'a');
     spectator.fixture.detectChanges();
+  });
+
+  it('should ignore hotkey when typing in an input', () => {
+    const spyFcn = createSpy('subscribe', (...args) => {});
+    spectator = createDirective(`<div [hotkeys]="'a'"><input></div>`);
+    spectator.output('hotkey').subscribe(spyFcn);
+    spectator.dispatchKeyboardEvent(spectator.element.firstElementChild, 'keydown', 'a');
+    spectator.fixture.detectChanges();
+    expect(spyFcn).not.toHaveBeenCalled();
+  });
+
+  it('should trigger hotkey when typing in an input', () => {
+    const spyFcn = createSpy('subscribe', (...args) => {});
+    spectator = createDirective(`<div [hotkeys]="'a'" [hotkeysOptions]="{allowIn: ['INPUT']}"><input></div>`);
+    spectator.output('hotkey').subscribe(spyFcn);
+    spectator.dispatchKeyboardEvent(spectator.element.firstElementChild, 'keydown', 'a');
+    spectator.fixture.detectChanges();
+    expect(spyFcn).toHaveBeenCalled();
   });
 
   it('should register hotkey', () => {

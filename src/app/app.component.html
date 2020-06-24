@@ -1,16 +1,19 @@
-<input
-  #input
-  placeholder="meta.a"
-  hotkeys="meta.a"
-  (hotkey)="handleHotkey($event)"
-  [hotkeysOptions]="{ preventDefault: false, trigger: 'keyup', showInHelpMenu: false }"
-/>
+<div #container>
+  <input
+    #input
+    placeholder="meta.a"
+    hotkeys="meta.a"
+    (hotkey)="handleHotkey($event)"
+    [hotkeysOptions]="{ preventDefault: false, trigger: 'keyup', showInHelpMenu: false, allowIn: ['input'] }"
+  />
 
-<input
-  #input2
-  placeholder="control.g"
-  hotkeys="control.g"
-  (hotkey)="handleHotkey($event)"
-  hotkeysDescription="Switch branch/tag"
-  hotkeysGroup="Source code browsing"
-/>
+  <input
+    #input2
+    placeholder="control.g"
+    hotkeys="control.g"
+    (hotkey)="handleHotkey($event)"
+    hotkeysDescription="Switch branch/tag"
+    hotkeysGroup="Source code browsing"
+    [hotkeysOptions]="{ allowIn: ['input'] }"
+  />
+</div>

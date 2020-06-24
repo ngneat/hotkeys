@@ -7,6 +7,7 @@ import { coerceArray } from './utils/array';
 
 interface Options {
   trigger: 'keydown' | 'keyup';
+  allowIn: string[];
   showInHelpMenu: boolean;
   preventDefault: boolean;
 }

@@ -107,6 +107,8 @@ interface Options {
   element: HTMLElement;
   // The type of event (defaults to `keydown`)
   trigger: 'keydown' | 'keyup';
+  // Allow input, textarea and select as key event sources (defaults to `[]`) 
+  allowIn: string[];
   // hotkey description
   description: string;
   // Included in the shortcut list to be display in the help dialog (defaults to `true`)
