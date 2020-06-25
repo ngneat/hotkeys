@@ -20,7 +20,8 @@ describe('Directive: Hotkeys', () => {
     const spyFcn = createSpy('subscribe', (...args) => {});
     spectator = createDirective(`<div [hotkeys]="'a'"><input></div>`);
     spectator.output('hotkey').subscribe(spyFcn);
-    spectator.dispatchKeyboardEvent(spectator.element.firstElementChild, 'keydown', 'a');
+    spyOnProperty(document.activeElement, 'nodeName', 'get').and.returnValue('INPUT');
+    spectator.dispatchKeyboardEvent(spectator.element.firstElementChild, 'keydown', 'a', spectator.element);
     spectator.fixture.detectChanges();
     expect(spyFcn).not.toHaveBeenCalled();
   });
@@ -29,6 +30,7 @@ describe('Directive: Hotkeys', () => {
     const spyFcn = createSpy('subscribe', (...args) => {});
     spectator = createDirective(`<div [hotkeys]="'a'" [hotkeysOptions]="{allowIn: ['INPUT']}"><input></div>`);
     spectator.output('hotkey').subscribe(spyFcn);
+    spyOnProperty(document.activeElement, 'nodeName', 'get').and.returnValue('INPUT');
     spectator.dispatchKeyboardEvent(spectator.element.firstElementChild, 'keydown', 'a');
     spectator.fixture.detectChanges();
     expect(spyFcn).toHaveBeenCalled();

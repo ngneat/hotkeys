@@ -30,7 +30,7 @@ export class AppComponent implements AfterViewInit {
         keys: 'meta.g',
         element: this.input.nativeElement,
         description: 'Go to Code',
-        allowIn: ['input'],
+        allowIn: ['INPUT'],
         preventDefault: false,
         group: 'Repositories'
       })

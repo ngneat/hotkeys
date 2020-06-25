@@ -6,11 +6,12 @@ import { Observable, of } from 'rxjs';
 import { hostPlatform, normalizeKeys } from './utils/platform';
 import { coerceArray } from './utils/array';
 
+export type AllowInElement = 'INPUT' | 'TEXTAREA' | 'SELECT';
 interface Options {
   group: string;
   element: HTMLElement;
   trigger: 'keydown' | 'keyup';
-  allowIn: string[];
+  allowIn: AllowInElement[];
   description: string;
   showInHelpMenu: boolean;
   preventDefault: boolean;
@@ -81,13 +82,9 @@ export class HotkeysService {
     return new Observable(observer => {
       const handler = (e: KeyboardEvent) => {
         const hotkey = this.hotkeys.get(normalizedKeys);
-        const excludedTargets = this.getExcludedTargets(hotkey.allowIn);
-        const excludedTargetsRegex = new RegExp(`^(${excludedTargets.join('|')})$`);
+        const excludedTargets = this.getExcludedTargets(hotkey.allowIn || []);
 
-        // Added srcElement as a fallback when target is not present, i.e. during testing.
-        const skipShortcutTrigger =
-          excludedTargets && excludedTargetsRegex.test(((e.target || e.srcElement) as HTMLElement).nodeName);
-
+        const skipShortcutTrigger = excludedTargets && excludedTargets.includes(document.activeElement.nodeName);
         if (skipShortcutTrigger) {
           return;
         }
@@ -137,8 +134,7 @@ export class HotkeysService {
     });
   }
 
-  private getExcludedTargets(allowIn: string[]) {
-    const upperCaseAllowIn = (allowIn || []).map(t => t.toUpperCase());
-    return ['INPUT', 'SELECT', 'TEXTAREA'].filter(t => !upperCaseAllowIn.includes(t));
+  private getExcludedTargets(allowIn: AllowInElement[]) {
+    return ['INPUT', 'SELECT', 'TEXTAREA'].filter(t => !allowIn.includes(t as AllowInElement));
   }
 }
