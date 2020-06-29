@@ -67,8 +67,12 @@ Additionally, the directive accepts three more `input`s:
 
 For example:
 
+<!-- prettier-ignore -->
 ```html
-<input hotkeys="meta.n" hotkeysGroup="File" hotkeysDescription="New Document" (hotkey)="handleHotkey($event)"
+<input hotkeys="meta.n" 
+      hotkeysGroup="File" 
+      hotkeysDescription="New Document" 
+      (hotkey)="handleHotkey($event)"
 ```
 
 ## Hotkeys Service
@@ -104,7 +108,8 @@ interface Options {
   element: HTMLElement;
   // The type of event (defaults to `keydown`)
   trigger: 'keydown' | 'keyup';
-  // Allow input, textarea and select as key event sources (defaults to []). AllowInElement can be 'INPUT', 'TEXTAREA' or 'SELECT'.
+  // Allow input, textarea and select as key event sources (defaults to []).
+  // It can be 'INPUT', 'TEXTAREA' or 'SELECT'.
   allowIn: AllowInElement[];
   // hotkey description
   description: string;
@@ -213,9 +218,13 @@ export class AppComponent {
 
 It's possible to enable them in the template as well:
 
+<!-- prettier-ignore -->
 ```html
-<input hotkeys="meta.n" hotkeysGroup="File" hotkeysDescription="New Document" hotkeysOptions="{allowIn: ['INPUT',
-'SELECT', 'TEXTAREA']}" (hotkey)="handleHotkey($event)"
+<input hotkeys="meta.n" 
+      hotkeysGroup="File" 
+      hotkeysDescription="New Document" 
+      hotkeysOptions="{allowIn: ['INPUT','SELECT', 'TEXTAREA']}" 
+      (hotkey)="handleHotkey($event)"
 ```
 
 That's all for now! Make sure to check out the `playground` inside the `src` [folder](https://github.com/ngneat/hotkeys/tree/master/src/app).
