@@ -79,6 +79,7 @@ describe('Service: Hotkeys', () => {
     expect(hks[0]).toEqual({
       element: document.documentElement,
       showInHelpMenu: true,
+      allowIn: [],
       keys: 'a',
       trigger: 'keydown',
       group: undefined,
@@ -91,6 +92,7 @@ describe('Service: Hotkeys', () => {
     const options: Hotkey = {
       element: document.body,
       showInHelpMenu: false,
+      allowIn: [],
       keys: 'a',
       trigger: 'keydown',
       group: 'test group',

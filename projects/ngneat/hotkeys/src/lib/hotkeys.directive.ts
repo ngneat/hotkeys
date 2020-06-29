@@ -2,11 +2,12 @@ import { Directive, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Outpu
 import { merge, Subscription } from 'rxjs';
 import { mergeAll } from 'rxjs/operators';
 
-import { Hotkey, HotkeysService } from './hotkeys.service';
+import { AllowInElement, Hotkey, HotkeysService } from './hotkeys.service';
 import { coerceArray } from './utils/array';
 
 interface Options {
   trigger: 'keydown' | 'keyup';
+  allowIn: AllowInElement[];
   showInHelpMenu: boolean;
   preventDefault: boolean;
 }

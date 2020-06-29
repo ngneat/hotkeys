@@ -107,6 +107,8 @@ interface Options {
   element: HTMLElement;
   // The type of event (defaults to `keydown`)
   trigger: 'keydown' | 'keyup';
+  // Allow input, textarea and select as key event sources (defaults to []). AllowInElement can be 'INPUT', 'TEXTAREA' or 'SELECT'.
+  allowIn: AllowInElement[];
   // hotkey description
   description: string;
   // Included in the shortcut list to be display in the help dialog (defaults to `true`)
@@ -185,6 +187,38 @@ The pipe accepts and additional parameter the way key combinations are separated
 <div class="help-dialog-shortcut-key">
   <kbd [innerHTML]="hotkey.keys | hotkeysShortcut: '-'"></kbd>
 </div>
+```
+
+## Allowing hotkeys in form elements
+
+Hotkeys prevents shortcuts callbacks from firing when their event sources are form elements, that is, input, select, or textarea elements. 
+To enable hotkeys in these elements, enable them using the allowIn option:
+
+```ts
+import { HotkeysService } from '@ngneat/hotkeys';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  constructor(private hotkeys: HotkeysService) {}
+
+  ngOnInit() {
+    this.hotkeys.addShortcut({ keys: 'meta.a', allowIn: ['INPUT', 'SELECT', 'TEXTAREA']}).subscribe(e => console.log('Hotkey', e));
+  }
+}
+```
+
+It is possible to enable them in your view as well:
+
+```html
+<input hotkeys="meta.n" 
+       hotkeysGroup="File" 
+       hotkeysDescription="New Document"
+       hotkeysOptions="{allowIn: ['INPUT', 'SELECT', 'TEXTAREA']}"
+       (hotkey)="handleHotkey($event)"
 ```
 
 That's all for now! Make sure to check out the `playground` inside the `src` [folder](https://github.com/ngneat/hotkeys/tree/master/src/app).

@@ -6,10 +6,12 @@ import { Observable, of } from 'rxjs';
 import { hostPlatform, normalizeKeys } from './utils/platform';
 import { coerceArray } from './utils/array';
 
+export type AllowInElement = 'INPUT' | 'TEXTAREA' | 'SELECT';
 interface Options {
   group: string;
   element: HTMLElement;
   trigger: 'keydown' | 'keyup';
+  allowIn: AllowInElement[];
   description: string;
   showInHelpMenu: boolean;
   preventDefault: boolean;
@@ -19,6 +21,7 @@ export interface HotkeyGroup {
   group: string;
   hotkeys: { keys: string; description: string }[];
 }
+
 export type Hotkey = Partial<Options> & { keys: string };
 export type HotkeyCallback = (event: KeyboardEvent, keys: string, target: HTMLElement) => void;
 
@@ -27,6 +30,7 @@ export class HotkeysService {
   private readonly hotkeys = new Map<string, Hotkey>();
   private readonly defaults: Options = {
     trigger: 'keydown',
+    allowIn: [],
     element: this.document.documentElement,
     group: undefined,
     description: undefined,
@@ -77,15 +81,21 @@ export class HotkeysService {
 
     return new Observable(observer => {
       const handler = (e: KeyboardEvent) => {
+        const hotkey = this.hotkeys.get(normalizedKeys);
+        const excludedTargets = this.getExcludedTargets(hotkey.allowIn || []);
+
+        const skipShortcutTrigger = excludedTargets && excludedTargets.includes(document.activeElement.nodeName);
+        if (skipShortcutTrigger) {
+          return;
+        }
+
         if (mergedOptions.preventDefault) {
           e.preventDefault();
         }
 
-        const hotkey = this.hotkeys.get(normalizedKeys);
         this.callbacks.forEach(cb => cb(e, normalizedKeys, hotkey.element));
         observer.next(e);
       };
-
       const dispose = this.eventManager.addEventListener(mergedOptions.element, event, handler);
 
       return () => {
@@ -115,11 +125,16 @@ export class HotkeysService {
   registerHelpModal(openHelpModalFn: () => void, helpShortcut: string = '') {
     this.addShortcut({ keys: helpShortcut || 'shift.?', showInHelpMenu: false, preventDefault: false }).subscribe(e => {
       const skipMenu =
-        /^(input|textarea)$/i.test(document.activeElement.nodeName) || (e.target as HTMLElement).isContentEditable;
+        /^(input|textarea|select)$/i.test(document.activeElement.nodeName) ||
+        (e.target as HTMLElement).isContentEditable;
 
       if (!skipMenu && this.hotkeys.size) {
         openHelpModalFn();
       }
     });
+  }
+
+  private getExcludedTargets(allowIn: AllowInElement[]) {
+    return ['INPUT', 'SELECT', 'TEXTAREA'].filter(t => !allowIn.includes(t as AllowInElement));
   }
 }
