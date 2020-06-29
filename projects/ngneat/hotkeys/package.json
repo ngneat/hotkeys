@@ -1,6 +1,6 @@
 {
   "name": "@ngneat/hotkeys",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A declarative library for handling hotkeys in Angular applications",
   "peerDependencies": {
     "@angular/common": "^8.0.0",
