@@ -21,10 +21,10 @@ Web apps are getting closer and closer to be desktop-class applications. With th
 
 ## Features
 
-- ✅  Support Element Scope
-- ✅  Support Global Listeners
-- ✅  Platform Agnostic
-- ✅  Hotkeys Cheatsheet
+- ✅ Support Element Scope
+- ✅ Support Global Listeners
+- ✅ Platform Agnostic
+- ✅ Hotkeys Cheatsheet
 
 ## Table of Contents
 
@@ -68,10 +68,7 @@ Additionally, the directive accepts three more `input`s:
 For example:
 
 ```html
-<input hotkeys="meta.n" 
-       hotkeysGroup="File" 
-       hotkeysDescription="New Document" 
-       (hotkey)="handleHotkey($event)"
+<input hotkeys="meta.n" hotkeysGroup="File" hotkeysDescription="New Document" (hotkey)="handleHotkey($event)"
 ```
 
 ## Hotkeys Service
@@ -119,6 +116,7 @@ interface Options {
 ```
 
 #### `onShortcut`
+
 Listen to any registered hotkey. For example:
 
 ```ts
@@ -129,6 +127,7 @@ unsubscribe();
 ```
 
 #### `registerHelpModal`
+
 Display a help dialog listing all visible hotkeys:
 
 ```ts
@@ -191,8 +190,7 @@ The pipe accepts and additional parameter the way key combinations are separated
 
 ## Allowing hotkeys in form elements
 
-Hotkeys prevents shortcuts callbacks from firing when their event sources are form elements, that is, input, select, or textarea elements. 
-To enable hotkeys in these elements, enable them using the allowIn option:
+By default, the library prevents hotkey callbacks from firing when their event originates from an `input`, `select`, or `textarea` element. To enable hotkeys in these elements, specify them in the `allowIn` parameter:
 
 ```ts
 import { HotkeysService } from '@ngneat/hotkeys';
@@ -206,19 +204,18 @@ export class AppComponent {
   constructor(private hotkeys: HotkeysService) {}
 
   ngOnInit() {
-    this.hotkeys.addShortcut({ keys: 'meta.a', allowIn: ['INPUT', 'SELECT', 'TEXTAREA']}).subscribe(e => console.log('Hotkey', e));
+    this.hotkeys
+      .addShortcut({ keys: 'meta.a', allowIn: ['INPUT', 'SELECT', 'TEXTAREA'] })
+      .subscribe(e => console.log('Hotkey', e));
   }
 }
 ```
 
-It is possible to enable them in your view as well:
+It's possible to enable them in the template as well:
 
 ```html
-<input hotkeys="meta.n" 
-       hotkeysGroup="File" 
-       hotkeysDescription="New Document"
-       hotkeysOptions="{allowIn: ['INPUT', 'SELECT', 'TEXTAREA']}"
-       (hotkey)="handleHotkey($event)"
+<input hotkeys="meta.n" hotkeysGroup="File" hotkeysDescription="New Document" hotkeysOptions="{allowIn: ['INPUT',
+'SELECT', 'TEXTAREA']}" (hotkey)="handleHotkey($event)"
 ```
 
 That's all for now! Make sure to check out the `playground` inside the `src` [folder](https://github.com/ngneat/hotkeys/tree/master/src/app).
@@ -256,6 +253,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
