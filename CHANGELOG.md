@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.2](https://github.com/ngneat/hotkeys/compare/v1.1.1...v1.1.2) (2021-01-02)
+
+
+### Bug Fixes
+
+* 🐛 remove peer deps ([b54f358](https://github.com/ngneat/hotkeys/commit/b54f3589ea8dcd1fafe8b115f9f4d84b9691d216))
+
 ### [1.1.1](https://github.com/ngneat/hotkeys/compare/v1.1.0...v1.1.1) (2020-06-29)
 
 
