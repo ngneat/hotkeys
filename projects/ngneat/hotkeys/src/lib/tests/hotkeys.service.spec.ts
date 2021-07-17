@@ -30,6 +30,21 @@ describe('Service: Hotkeys', () => {
     expect(spy).toHaveBeenCalled();
   });
 
+  it('should unsubscribe shortcuts when removed', () => {
+    const subscription = spectator.service.addShortcut({ keys: 'meta.a' }).subscribe();
+    spectator.service.removeShortcuts('meta.a');
+    expect(subscription.closed).toBe(true);
+  });
+
+  it('should delete hotkey and disposer when unsubscribed', () => {
+    spectator.service
+      .addShortcut({ keys: 'meta.a' })
+      .subscribe()
+      .unsubscribe();
+    expect(spectator.service.getHotkeys().length).toBe(0);
+    expect(spectator.service['disposers'].has('meta.a')).toBe(false);
+  });
+
   it('should listen to keydown', () => {
     const spyFcn = createSpy('subscribe', e => {});
     spectator.service.addShortcut({ keys: 'a' }).subscribe(spyFcn);
