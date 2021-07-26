@@ -25,9 +25,6 @@ describe('Service: Hotkeys', () => {
     spectator.service.removeShortcuts(['meta.a', 'meta.b']);
     spectator.service.removeShortcuts('meta.c');
     expect(spectator.service.getHotkeys().length).toBe(0);
-    const spy = spyOn(console, 'warn');
-    spectator.service.removeShortcuts('meta.c');
-    expect(spy).toHaveBeenCalled();
   });
 
   it('should unsubscribe shortcuts when removed', () => {
@@ -42,7 +39,6 @@ describe('Service: Hotkeys', () => {
       .subscribe()
       .unsubscribe();
     expect(spectator.service.getHotkeys().length).toBe(0);
-    expect(spectator.service['disposers'].has('meta.a')).toBe(false);
   });
 
   it('should listen to keydown', () => {

@@ -5,7 +5,7 @@ import { Observable, of, Subject } from 'rxjs';
 
 import { hostPlatform, normalizeKeys } from './utils/platform';
 import { coerceArray } from './utils/array';
-import { takeUntil } from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
 
 export type AllowInElement = 'INPUT' | 'TEXTAREA' | 'SELECT';
 interface Options {
@@ -29,7 +29,7 @@ export type HotkeyCallback = (event: KeyboardEvent, keys: string, target: HTMLEl
 @Injectable({ providedIn: 'root' })
 export class HotkeysService {
   private readonly hotkeys = new Map<string, Hotkey>();
-  private readonly disposers = new Map<string, Subject<void>>();
+  private readonly dispose = new Subject<string>();
   private readonly defaults: Options = {
     trigger: 'keydown',
     allowIn: [],
@@ -81,9 +81,6 @@ export class HotkeysService {
     this.hotkeys.set(normalizedKeys, mergedOptions);
     const event = `${mergedOptions.trigger}.${normalizedKeys}`;
 
-    const disposer = new Subject<void>();
-    this.disposers.set(normalizedKeys, disposer);
-
     return new Observable(observer => {
       const handler = (e: KeyboardEvent) => {
         const hotkey = this.hotkeys.get(normalizedKeys);
@@ -105,23 +102,15 @@ export class HotkeysService {
 
       return () => {
         this.hotkeys.delete(normalizedKeys);
-        this.disposers.delete(normalizedKeys);
-        dispose();
       };
-    }).pipe(takeUntil<KeyboardEvent>(disposer));
+    }).pipe(takeUntil<KeyboardEvent>(this.dispose.pipe(filter(v => v === normalizedKeys))));
   }
 
   removeShortcuts(hotkeys: string | string[]): void {
     const coercedHotkeys = coerceArray(hotkeys).map(hotkey => normalizeKeys(hotkey, hostPlatform()));
     coercedHotkeys.forEach(hotkey => {
-      if (!this.hotkeys.has(hotkey)) {
-        console.warn(`Hotkey ${hotkey} not found`);
-        return;
-      }
       this.hotkeys.delete(hotkey);
-      const disposer = this.disposers.get(hotkey);
-      disposer.next();
-      this.disposers.delete(hotkey);
+      this.dispose.next(hotkey);
     });
   }
 
