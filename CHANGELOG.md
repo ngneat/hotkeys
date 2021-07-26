@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.3](https://github.com/ngneat/hotkeys/compare/v1.1.2...v1.1.3) (2021-07-26)
+
+
+### Bug Fixes
+
+* unsubscribe shortcuts when removed ([1e2aba3](https://github.com/ngneat/hotkeys/commit/1e2aba3bb5256231ef1542aceb7744298888ec4c))
+* use single subject ([91d9ad8](https://github.com/ngneat/hotkeys/commit/91d9ad8409df0989ad7f94be9299d188cabbf6db))
+
 ### [1.1.2](https://github.com/ngneat/hotkeys/compare/v1.1.1...v1.1.2) (2021-01-02)
 
 
