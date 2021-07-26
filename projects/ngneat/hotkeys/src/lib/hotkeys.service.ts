@@ -1,10 +1,11 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
 import { EventManager } from '@angular/platform-browser';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 
 import { hostPlatform, normalizeKeys } from './utils/platform';
 import { coerceArray } from './utils/array';
+import { filter, takeUntil } from 'rxjs/operators';
 
 export type AllowInElement = 'INPUT' | 'TEXTAREA' | 'SELECT';
 interface Options {
@@ -28,6 +29,7 @@ export type HotkeyCallback = (event: KeyboardEvent, keys: string, target: HTMLEl
 @Injectable({ providedIn: 'root' })
 export class HotkeysService {
   private readonly hotkeys = new Map<string, Hotkey>();
+  private readonly dispose = new Subject<string>();
   private readonly defaults: Options = {
     trigger: 'keydown',
     allowIn: [],
@@ -100,19 +102,15 @@ export class HotkeysService {
 
       return () => {
         this.hotkeys.delete(normalizedKeys);
-        dispose();
       };
-    });
+    }).pipe(takeUntil<KeyboardEvent>(this.dispose.pipe(filter(v => v === normalizedKeys))));
   }
 
   removeShortcuts(hotkeys: string | string[]): void {
     const coercedHotkeys = coerceArray(hotkeys).map(hotkey => normalizeKeys(hotkey, hostPlatform()));
     coercedHotkeys.forEach(hotkey => {
-      if (!this.hotkeys.has(hotkey)) {
-        console.warn(`Hotkey ${hotkey} not found`);
-        return;
-      }
       this.hotkeys.delete(hotkey);
+      this.dispose.next(hotkey);
     });
   }
 
