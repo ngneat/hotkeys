@@ -102,6 +102,7 @@ export class HotkeysService {
 
       return () => {
         this.hotkeys.delete(normalizedKeys);
+        dispose();
       };
     }).pipe(takeUntil<KeyboardEvent>(this.dispose.pipe(filter(v => v === normalizedKeys))));
   }
