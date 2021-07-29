@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.4](https://github.com/ngneat/hotkeys/compare/v1.1.3...v1.1.4) (2021-07-29)
+
+
+### Bug Fixes
+
+* dispose EventManager when unsubscribed ([91083c6](https://github.com/ngneat/hotkeys/commit/91083c6fc735f60e0851fcabba69bc373c5f90e2))
+
 ### [1.1.3](https://github.com/ngneat/hotkeys/compare/v1.1.2...v1.1.3) (2021-07-26)
 
 
