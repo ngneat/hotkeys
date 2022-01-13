@@ -6,14 +6,28 @@ export function hostPlatform(): Platform {
 }
 
 export function normalizeKeys(keys: string, platform: Platform): string {
-  const lowercaseKeys = keys.toLowerCase();
-  switch (platform) {
-    case 'pc':
-      return lowercaseKeys
-        .split('.')
-        .map(k => (k === 'meta' ? 'control' : k))
-        .join('.');
-    default:
-      return keys;
+  const transformMap = {
+    up: 'ArrowUp',
+    down: 'ArrowDown',
+    left: 'ArrowLeft',
+    right: 'ArrowRight'
+  };
+
+  function transform(key: string): string {
+    if (platform === 'pc' && key === 'meta') {
+      key = 'control';
+    }
+
+    if (key in transformMap) {
+      key = transformMap[key];
+    }
+
+    return key;
   }
+
+  return keys
+    .toLowerCase()
+    .split('.')
+    .map(transform)
+    .join('.');
 }

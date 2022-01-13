@@ -136,6 +136,13 @@ describe('Service: Hotkeys', () => {
       ]
     });
   });
+
+  it('should listen to up', () => {
+    const spyFcn = createSpy('subscribe', e => {});
+    spectator.service.addShortcut({ keys: 'up' }).subscribe(spyFcn);
+    fakeKeyboardPress('ArrowUp');
+    expect(spyFcn).toHaveBeenCalled();
+  });
 });
 
 function fakeKeyboardPress(key: string, type = 'keydown') {
