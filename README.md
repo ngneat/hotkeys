@@ -75,7 +75,7 @@ For example:
       hotkeysDescription="New Document" 
       (hotkey)="handleHotkey($event)"
 ```
-or
+Example sequence hotkey:
 ```html
 <input hotkeys="g>i" 
       hotkeysGroup="Navigate" 
@@ -189,9 +189,6 @@ Set the number of milliseconds to debounce a sequence of keys
 
 ```ts
 this.hotkeys.setSequenceDebounce(500);
-
-// When you're done listening, unsubscribe
-unsubscribe();
 ```
 
 ## Hotkeys Shortcut Pipe
