@@ -34,8 +34,28 @@ export class AppComponent implements AfterViewInit {
       })
       .subscribe(e => {
         console.log('Test Sequence:', e);
+      });
 
-        this.hotkeys.removeShortcuts('g>t');
+    this.hotkeys
+      .addSequenceShortcut({
+        keys: 'control.b>control.,',
+        description: 'Expand All',
+        preventDefault: false,
+        group: 'Sequencing'
+      })
+      .subscribe(e => {
+        console.log('Test Sequence:', e);
+      });
+
+    this.hotkeys
+      .addSequenceShortcut({
+        keys: 'r>s',
+        description: 'Remove this sequence',
+        preventDefault: false,
+        group: 'Sequencing'
+      })
+      .subscribe(() => {
+        this.hotkeys.removeShortcuts('r>s');
       });
 
     this.hotkeys

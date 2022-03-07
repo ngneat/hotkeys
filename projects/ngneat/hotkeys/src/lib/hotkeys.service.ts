@@ -105,7 +105,12 @@ export class HotkeysService {
     const getObserver = (element: HTMLElement, eventName: string) => {
       let sequence = '';
       return fromEvent<KeyboardEvent>(element, eventName).pipe(
-        tap(e => (sequence = `${sequence}${sequence ? '>' : ''}${e.key}`)),
+        tap(
+          e =>
+            (sequence = `${sequence}${sequence ? '>' : ''}${e.ctrlKey ? 'control.' : ''}${e.altKey ? 'alt.' : ''}${
+              e.shiftKey ? 'shift.' : ''
+            }${e.key}`)
+        ),
         debounceTime(this.sequenceDebounce),
         mergeMap(() => {
           const resultSequence = sequence;

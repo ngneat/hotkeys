@@ -43,12 +43,14 @@ export class HotkeysShortcutPipe implements PipeTransform {
     }
     return value
       .split('>')
-      .join(thenSeparator)
-      .split('.')
-      .map(c => c.toLowerCase())
-      .map(c => this.symbols[c] || c)
-      .join(dotSeparator)
-      .split('>');
+      .map(s =>
+        s
+          .split('.')
+          .map(c => c.toLowerCase())
+          .map(c => this.symbols[c] || c)
+          .join(dotSeparator)
+      )
+      .join(thenSeparator);
   }
 
   private getPlatformSymbols(platform): any {
