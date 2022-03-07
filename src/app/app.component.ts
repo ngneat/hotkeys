@@ -26,6 +26,19 @@ export class AppComponent implements AfterViewInit {
     this.hotkeys.registerHelpModal(helpFcn);
 
     this.hotkeys
+      .addSequenceShortcut({
+        keys: 'g>t',
+        description: 'In Code Test',
+        preventDefault: false,
+        group: 'Sequencing'
+      })
+      .subscribe(e => {
+        console.log('Test Sequence:', e);
+
+        this.hotkeys.removeShortcuts('g>t');
+      });
+
+    this.hotkeys
       .addShortcut({
         keys: 'meta.g',
         element: this.input.nativeElement,

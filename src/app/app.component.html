@@ -16,4 +16,15 @@
     hotkeysGroup="Source code browsing"
     [hotkeysOptions]="{ allowIn: ['input'] }"
   />
+
+  <input
+    #input3
+    placeholder="m>t"
+    hotkeys="m>t"
+    (hotkey)="handleHotkey($event)"
+    hotkeysDescription="Directive Test"
+    hotkeysGroup="Sequencing"
+    [hotkeysOptions]="{ allowIn: ['input'] }"
+    [isSequence]="true"
+  />
 </div>

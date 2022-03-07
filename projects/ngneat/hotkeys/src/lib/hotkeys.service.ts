@@ -1,11 +1,11 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
 import { EventManager } from '@angular/platform-browser';
-import { Observable, of, Subject } from 'rxjs';
+import { EMPTY, fromEvent, Observable, of, Subject, Subscription } from 'rxjs';
+import { debounceTime, filter, mergeMap, takeUntil, tap } from 'rxjs/operators';
 
-import { hostPlatform, normalizeKeys } from './utils/platform';
 import { coerceArray } from './utils/array';
-import { filter, takeUntil } from 'rxjs/operators';
+import { hostPlatform, normalizeKeys } from './utils/platform';
 
 export type AllowInElement = 'INPUT' | 'TEXTAREA' | 'SELECT';
 interface Options {
@@ -26,6 +26,17 @@ export interface HotkeyGroup {
 export type Hotkey = Partial<Options> & { keys: string };
 export type HotkeyCallback = (event: KeyboardEvent, keys: string, target: HTMLElement) => void;
 
+interface HotkeySummary {
+  hotkey: Hotkey;
+  subject: Subject<Hotkey>;
+}
+
+interface SequenceSummary {
+  subscription: Subscription;
+  observer: Observable<Hotkey>;
+  hotkeyMap: Map<string, HotkeySummary>;
+}
+
 @Injectable({ providedIn: 'root' })
 export class HotkeysService {
   private readonly hotkeys = new Map<string, Hotkey>();
@@ -40,6 +51,8 @@ export class HotkeysService {
     preventDefault: true
   };
   private callbacks: HotkeyCallback[] = [];
+  private sequenceMaps = new Map<HTMLElement, SequenceSummary>();
+  private sequenceDebounce: number = 250;
 
   constructor(private eventManager: EventManager, @Inject(DOCUMENT) private document) {}
 
@@ -50,6 +63,10 @@ export class HotkeysService {
   getShortcuts(): HotkeyGroup[] {
     const hotkeys = Array.from(this.hotkeys.values());
     const groups: HotkeyGroup[] = [];
+    const sequenceKeys = Array.from(this.sequenceMaps.values())
+      .map(s => [s.hotkeyMap].reduce((_acc, val) => [...val.values()], []))
+      .reduce((_x, y) => y, [])
+      .map(h => h.hotkey);
 
     for (const hotkey of hotkeys) {
       if (!hotkey.showInHelpMenu) {
@@ -66,7 +83,77 @@ export class HotkeysService {
       group.hotkeys.push({ keys: normalizedKeys, description: hotkey.description });
     }
 
+    for (const hotkey of sequenceKeys) {
+      if (!hotkey.showInHelpMenu) {
+        continue;
+      }
+
+      let group = groups.find(g => g.group === hotkey.group);
+      if (!group) {
+        group = { group: hotkey.group, hotkeys: [] };
+        groups.push(group);
+      }
+
+      const normalizedKeys = normalizeKeys(hotkey.keys, hostPlatform());
+      group.hotkeys.push({ keys: normalizedKeys, description: hotkey.description });
+    }
+
     return groups;
+  }
+
+  addSequenceShortcut(options: Hotkey): Observable<Hotkey> {
+    const getObserver = (element: HTMLElement, eventName: string) => {
+      let sequence = '';
+      return fromEvent<KeyboardEvent>(element, eventName).pipe(
+        tap(e => (sequence = `${sequence}${sequence ? '>' : ''}${e.key}`)),
+        debounceTime(this.sequenceDebounce),
+        mergeMap(() => {
+          const resultSequence = sequence;
+          sequence = '';
+          const summary = this.sequenceMaps.get(element);
+          if (summary.hotkeyMap.has(resultSequence)) {
+            const hotkeySummary = summary.hotkeyMap.get(resultSequence);
+            hotkeySummary.subject.next(hotkeySummary.hotkey);
+            return of(hotkeySummary.hotkey);
+          } else {
+            return EMPTY;
+          }
+        })
+      );
+    };
+
+    const mergedOptions = { ...this.defaults, ...options };
+    let normalizedKeys = normalizeKeys(mergedOptions.keys, hostPlatform());
+
+    if (this.sequenceMaps.has(mergedOptions.element)) {
+      const sequenceSummary = this.sequenceMaps.get(mergedOptions.element);
+
+      if (sequenceSummary.hotkeyMap.has(normalizedKeys)) {
+        console.error('Duplicated shortcut');
+        return of(null);
+      }
+
+      const hotkeySummary = {
+        subject: new Subject<Hotkey>(),
+        hotkey: mergedOptions
+      };
+
+      sequenceSummary.hotkeyMap.set(normalizedKeys, hotkeySummary);
+      return hotkeySummary.subject.asObservable();
+    } else {
+      const observer = getObserver(mergedOptions.element, mergedOptions.trigger);
+      const subscription = observer.subscribe();
+
+      const hotkeySummary = {
+        subject: new Subject<Hotkey>(),
+        hotkey: mergedOptions
+      };
+      const hotkeyMap = new Map<string, HotkeySummary>([[normalizedKeys, hotkeySummary]]);
+      const sequenceSummary = { subscription, observer, hotkeyMap };
+      this.sequenceMaps.set(mergedOptions.element, sequenceSummary);
+
+      return hotkeySummary.subject.asObservable();
+    }
   }
 
   addShortcut(options: Hotkey): Observable<KeyboardEvent> {
@@ -112,7 +199,18 @@ export class HotkeysService {
     coercedHotkeys.forEach(hotkey => {
       this.hotkeys.delete(hotkey);
       this.dispose.next(hotkey);
+
+      this.sequenceMaps.forEach(v => {
+        v.hotkeyMap.delete(hotkey);
+        if (v.hotkeyMap.size === 0) {
+          v.subscription.unsubscribe();
+        }
+      });
     });
+  }
+
+  setSequenceDebounce(debounce: number): void {
+    this.sequenceDebounce = debounce;
   }
 
   onShortcut(callback: HotkeyCallback): () => void {
