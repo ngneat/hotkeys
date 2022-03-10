@@ -58,3 +58,58 @@ describe('Pipe: Hotkeys Shortcut', () => {
     expect(spectator.element).toHaveText('&#8679;#r');
   }));
 });
+
+describe('Pipe: Sequence Hotkeys Shortcut', () => {
+  const createPipe = createPipeFactory(HotkeysShortcutPipe);
+
+  it('should format hotkey with lowercase', fakeAsync(() => {
+    const spectator = createPipe(`{{ 'R>T' | hotkeysShortcut }}`);
+    expect(spectator.element).toHaveText('r then t');
+  }));
+
+  it('should format hotkey with enter', fakeAsync(() => {
+    const spectator = createPipe(`{{ 'enter.r>t' | hotkeysShortcut }}`);
+    expect(spectator.element).toHaveText('&#8996; + r then t');
+  }));
+
+  it('should format hotkey with apple Command', fakeAsync(() => {
+    spyOn(Platform, 'hostPlatform').and.returnValue('apple');
+    const spectator = createPipe(`{{ 'meta.r>t' | hotkeysShortcut }}`);
+    expect(spectator.element).toHaveText('&#8984; + r then t');
+  }));
+
+  it('should format hotkey with apple Option', fakeAsync(() => {
+    spyOn(Platform, 'hostPlatform').and.returnValue('apple');
+    const spectator = createPipe(`{{ 'altleft.r>t' | hotkeysShortcut }}`);
+    expect(spectator.element).toHaveText('&#8997; + r then t');
+  }));
+
+  it('should format hotkey with apple Escape', fakeAsync(() => {
+    spyOn(Platform, 'hostPlatform').and.returnValue('apple');
+    const spectator = createPipe(`{{ 'escape.r>t' | hotkeysShortcut }}`);
+    expect(spectator.element).toHaveText('&#9099; + r then t');
+  }));
+
+  it('should format hotkey with pc Ctrl', fakeAsync(() => {
+    spyOn(Platform, 'hostPlatform').and.returnValue('pc');
+    const spectator = createPipe(`{{ 'control.r>t' | hotkeysShortcut }}`);
+    expect(spectator.element).toHaveText('Ctrl + r then t');
+  }));
+
+  it('should format hotkey with pc Alt', fakeAsync(() => {
+    spyOn(Platform, 'hostPlatform').and.returnValue('pc');
+    const spectator = createPipe(`{{ 'altleft.r>t' | hotkeysShortcut }}`);
+    expect(spectator.element).toHaveText('Alt + r then t');
+  }));
+
+  it('should format hotkey with pc Escape', fakeAsync(() => {
+    spyOn(Platform, 'hostPlatform').and.returnValue('pc');
+    const spectator = createPipe(`{{ 'escape.r>t' | hotkeysShortcut }}`);
+    expect(spectator.element).toHaveText('Esc + r then t');
+  }));
+
+  it('should format hotkey with custom separator', fakeAsync(() => {
+    const spectator = createPipe(`{{ 'shift.r>t' | hotkeysShortcut:'#':' > '}}`);
+    expect(spectator.element).toHaveText('&#8679;#r > t');
+  }));
+});
