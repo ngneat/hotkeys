@@ -21,12 +21,13 @@ export class HotkeysDirective implements OnChanges, OnDestroy {
   constructor(private hotkeysService: HotkeysService, private elementRef: ElementRef) {}
 
   @Input() hotkeys: string;
+  @Input() isSequence: boolean = false;
   @Input() hotkeysGroup: string;
   @Input() hotkeysOptions: Partial<Options> = {};
   @Input() hotkeysDescription: string;
 
   @Output()
-  hotkey = new EventEmitter<KeyboardEvent>();
+  hotkey = new EventEmitter<KeyboardEvent | Hotkey>();
 
   ngOnChanges(changes: SimpleChanges): void {
     this.deleteHotkeys();
@@ -58,9 +59,11 @@ export class HotkeysDirective implements OnChanges, OnDestroy {
   private setHotkeys(hotkeys: Hotkey | Hotkey[]) {
     const coercedHotkeys = coerceArray(hotkeys);
     this.subscription = merge(
-      coercedHotkeys.map(hotkey =>
-        this.hotkeysService.addShortcut({ ...hotkey, element: this.elementRef.nativeElement })
-      )
+      coercedHotkeys.map(hotkey => {
+        return this.isSequence
+          ? this.hotkeysService.addSequenceShortcut({ ...hotkey, element: this.elementRef.nativeElement })
+          : this.hotkeysService.addShortcut({ ...hotkey, element: this.elementRef.nativeElement });
+      })
     )
       .pipe(mergeAll())
       .subscribe(e => this.hotkey.next(e));

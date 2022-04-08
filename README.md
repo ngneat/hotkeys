@@ -64,6 +64,7 @@ Additionally, the directive accepts three more `input`s:
 - `hotkeysGroup` - define the group name.
 - `hotkeysDescription` - add a description.
 - `hotkeysOptions` - See [Options](#options)
+- `isSequence` - indicate hotkey is a sequence of keys.
 
 For example:
 
@@ -74,7 +75,13 @@ For example:
       hotkeysDescription="New Document" 
       (hotkey)="handleHotkey($event)"
 ```
-
+Example sequence hotkey:
+```html
+<input hotkeys="g>i" 
+      hotkeysGroup="Navigate" 
+      hotkeysDescription="Go to Inbox" 
+      (hotkey)="handleHotkey($event)"
+```
 ## Hotkeys Service
 
 This is a global service that can be injected anywhere:
@@ -92,6 +99,7 @@ export class AppComponent {
 
   ngOnInit() {
     this.hotkeys.addShortcut({ keys: 'meta.a' }).subscribe(e => console.log('Hotkey', e));
+    this.hotkeys.addSequenceShortcut({ keys: 'g>i' }).subscribe(e => console.log('Hotkey', e));
   }
 }
 ```
@@ -173,6 +181,14 @@ Remove previously registered shortcuts.
 this.hotkeys.removeShortcuts('meta.a');
 // Remove several shortcuts
 this.hotkeys.removeShortcuts(['meta.1', 'meta.2']);
+```
+
+#### `setSequenceDebounce`
+
+Set the number of milliseconds to debounce a sequence of keys
+
+```ts
+this.hotkeys.setSequenceDebounce(500);
 ```
 
 ## Hotkeys Shortcut Pipe

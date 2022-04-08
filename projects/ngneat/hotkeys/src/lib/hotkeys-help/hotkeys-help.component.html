@@ -11,8 +11,8 @@
   </thead>
   <tbody>
     <tr class="hotkeys-table-help-shortcut" *ngFor="let hotkey of hotkeyGroup.hotkeys">
-      <td class="hotkeys-table-help-shortcut-description" width="75%">{{ hotkey.description }}</td>
-      <td class="hotkeys-table-help-shortcut-keys" width="25%">
+      <td class="hotkeys-table-help-shortcut-description" width="50%">{{ hotkey.description }}</td>
+      <td class="hotkeys-table-help-shortcut-keys" width="50%">
         <kbd [innerHTML]="hotkey.keys | hotkeysShortcut"></kbd>
       </td>
     </tr>

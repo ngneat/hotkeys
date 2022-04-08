@@ -27,7 +27,12 @@ export function normalizeKeys(keys: string, platform: Platform): string {
 
   return keys
     .toLowerCase()
-    .split('.')
-    .map(transform)
-    .join('.');
+    .split('>')
+    .map(s =>
+      s
+        .split('.')
+        .map(transform)
+        .join('.')
+    )
+    .join('>');
 }
