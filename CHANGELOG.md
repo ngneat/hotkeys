@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/ngneat/hotkeys/compare/v1.1.4...v1.2.0) (2022-04-09)
+
+
+### Features
+
+* support ctrl,alt,shift for sequence hotkey ([ac0f78d](https://github.com/ngneat/hotkeys/commit/ac0f78d5ff25ec4e0117c9f47de0ce598bc52418))
+* support for sequence hotkeys added ([fcdcdbd](https://github.com/ngneat/hotkeys/commit/fcdcdbd5403e9bd21b832fd9a90abb88fc6b5d5b))
+
+
+### Bug Fixes
+
+* arrow keys mapping to keycodes ([a772d84](https://github.com/ngneat/hotkeys/commit/a772d843efdb2ff7775e18f3a4aa6e83f6320d4e))
+
+
+### Tests
+
+* updated specs ([5acfe1b](https://github.com/ngneat/hotkeys/commit/5acfe1b0918e0d414c2f86e98f1511ccca06719e))
+
 ### [1.1.4](https://github.com/ngneat/hotkeys/compare/v1.1.3...v1.1.4) (2021-07-29)
 
 
