@@ -198,7 +198,7 @@ export class HotkeysService {
       this.hotkeys.delete(hotkey);
       this.dispose.next(hotkey);
 
-      this.sequenceMaps.forEach(v => {
+      this.sequenceMaps.forEach((v, k) => {
         const summary = v.hotkeyMap.get(hotkey);
         if (summary) {
           summary.subject.observers
@@ -209,6 +209,7 @@ export class HotkeysService {
         }
         if (v.hotkeyMap.size === 0) {
           v.subscription.unsubscribe();
+          this.sequenceMaps.delete(k);
         }
       });
     });
