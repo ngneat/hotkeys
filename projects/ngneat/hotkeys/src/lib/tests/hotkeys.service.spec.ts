@@ -346,6 +346,23 @@ describe('Service: Sequence Hotkeys', () => {
 
     return run();
   });
+  
+  it('should call callback after clearing and adding sequence shortcut', () => {
+  const run = async () => {
+    // * Need to space out time to prevent other test keystrokes from interfering with sequence
+    await sleep(250);
+    const spyFcn = createSpy('subscribe', (...args) => {});
+    spectator.service.addSequenceShortcut({ keys: 'g>h' }).subscribe();
+    spectator.service.removeShortcuts('g>h');
+    spectator.service.addSequenceShortcut({ keys: 'g>j' }).subscribe();
+    spectator.service.onShortcut(spyFcn);
+    fakeKeyboardSequencePress(['g', 'j']);
+    await sleep(250);
+    expect(spyFcn).toHaveBeenCalled();
+  };
+
+  return run();
+});
 
   it('should add sequence shortcut', () => {
     spectator.service.addSequenceShortcut({ keys: 'g>i' }).subscribe();
