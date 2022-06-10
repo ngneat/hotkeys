@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/ngneat/hotkeys/compare/v1.2.0...v1.3.0) (2022-06-10)
+
+
+### Features
+
+* ignore contentEditable elements ([4185015](https://github.com/ngneat/hotkeys/commit/4185015fb21e22f7f69ec7c885aafac5b2778a32))
+
+
+### Bug Fixes
+
+* added unit test ([f6d326c](https://github.com/ngneat/hotkeys/commit/f6d326cb515c651567f387fc0a21987f2edea785))
+* remove empty sequence map entry ([e66063e](https://github.com/ngneat/hotkeys/commit/e66063e735c92977d5c4afa213284eeaaa0a5458))
+
 ## [1.2.0](https://github.com/ngneat/hotkeys/compare/v1.1.4...v1.2.0) (2022-04-09)
 
 
