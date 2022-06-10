@@ -7,7 +7,7 @@ import { debounceTime, filter, finalize, mergeMap, takeUntil, tap } from 'rxjs/o
 import { coerceArray } from './utils/array';
 import { hostPlatform, normalizeKeys } from './utils/platform';
 
-export type AllowInElement = 'INPUT' | 'TEXTAREA' | 'SELECT';
+export type AllowInElement = 'INPUT' | 'TEXTAREA' | 'SELECT' | 'CONTENTEDITABLE';
 interface Options {
   group: string;
   element: HTMLElement;
@@ -54,7 +54,7 @@ export class HotkeysService {
   private sequenceMaps = new Map<HTMLElement, SequenceSummary>();
   private sequenceDebounce: number = 250;
 
-  constructor(private eventManager: EventManager, @Inject(DOCUMENT) private document) {}
+  constructor(private eventManager: EventManager, @Inject(DOCUMENT) private document: Document) {}
 
   getHotkeys(): Hotkey[] {
     const sequenceKeys = Array.from(this.sequenceMaps.values())
@@ -145,10 +145,7 @@ export class HotkeysService {
 
     return getSequenceCompleteObserver().pipe(
       takeUntil<Hotkey>(this.dispose.pipe(filter(v => v === normalizedKeys))),
-      filter(hotkey => {
-        const excludedTargets = this.getExcludedTargets(hotkey.allowIn || []);
-        return !excludedTargets?.includes(document.activeElement.nodeName);
-      }),
+      filter(hotkey => !this.targetIsExcluded(hotkey.allowIn)),
       tap(hotkey => this.callbacks.forEach(cb => cb(hotkey, normalizedKeys, hotkey.element))),
       finalize(() => this.removeShortcuts(normalizedKeys))
     );
@@ -169,9 +166,8 @@ export class HotkeysService {
     return new Observable(observer => {
       const handler = (e: KeyboardEvent) => {
         const hotkey = this.hotkeys.get(normalizedKeys);
-        const excludedTargets = this.getExcludedTargets(hotkey.allowIn || []);
+        const skipShortcutTrigger = this.targetIsExcluded(hotkey.allowIn);
 
-        const skipShortcutTrigger = excludedTargets && excludedTargets.includes(document.activeElement.nodeName);
         if (skipShortcutTrigger) {
           return;
         }
@@ -237,7 +233,21 @@ export class HotkeysService {
     });
   }
 
-  private getExcludedTargets(allowIn: AllowInElement[]) {
-    return ['INPUT', 'SELECT', 'TEXTAREA'].filter(t => !allowIn.includes(t as AllowInElement));
+  private targetIsExcluded(allowIn?: AllowInElement[]) {
+    const activeElement = this.document.activeElement;
+    const elementName = activeElement.nodeName;
+    const elementIsContentEditable = (activeElement as HTMLElement).isContentEditable;
+    let isExcluded = ['INPUT', 'SELECT', 'TEXTAREA'].includes(elementName) || elementIsContentEditable;
+
+    if (isExcluded && allowIn?.length) {
+      for (let t of allowIn) {
+        if (activeElement.nodeName === t || (t === 'CONTENTEDITABLE' && elementIsContentEditable)) {
+          isExcluded = false;
+          break;
+        }
+      }
+    }
+
+    return isExcluded;
   }
 }

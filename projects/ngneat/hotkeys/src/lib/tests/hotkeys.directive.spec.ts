@@ -36,6 +36,30 @@ describe('Directive: Hotkeys', () => {
     expect(spyFcn).toHaveBeenCalled();
   });
 
+  it('should ignore hotkey when typing in a contentEditable element', () => {
+    const spyFcn = createSpy('subscribe', (...args) => {});
+    spectator = createDirective(`<div [hotkeys]="'a'"><div contenteditable="true"></div></div>`);
+    spectator.output('hotkey').subscribe(spyFcn);
+    spyOnProperty(document.activeElement, 'nodeName', 'get').and.returnValue('DIV');
+    spyOnProperty(document.activeElement as HTMLElement, 'isContentEditable', 'get').and.returnValue(true);
+    spectator.dispatchKeyboardEvent(spectator.element.firstElementChild, 'keydown', 'a');
+    spectator.fixture.detectChanges();
+    expect(spyFcn).not.toHaveBeenCalled();
+  });
+
+  it('should trigger hotkey when typing in a contentEditable element', () => {
+    const spyFcn = createSpy('subscribe', (...args) => {});
+    spectator = createDirective(
+      `<div [hotkeys]="'a'" [hotkeysOptions]="{allowIn: ['CONTENTEDITABLE']}"><div contenteditable="true"></div></div>`
+    );
+    spectator.output('hotkey').subscribe(spyFcn);
+    spyOnProperty(document.activeElement, 'nodeName', 'get').and.returnValue('DIV');
+    spyOnProperty(document.activeElement as HTMLElement, 'isContentEditable', 'get').and.returnValue(true);
+    spectator.dispatchKeyboardEvent(spectator.element.firstElementChild, 'keydown', 'a');
+    spectator.fixture.detectChanges();
+    expect(spyFcn).toHaveBeenCalled();
+  });
+
   it('should register hotkey', () => {
     spectator = createDirective(`<div [hotkeys]="'a'"></div>`);
     spectator.fixture.detectChanges();
@@ -143,6 +167,46 @@ describe('Directive: Sequence Hotkeys', () => {
       await sleep(250);
       spectator.fixture.detectChanges();
       expect(spyFcn).not.toHaveBeenCalled();
+    };
+
+    return run();
+  });
+
+  it('should ignore hotkey when typing in a contentEditable element', () => {
+    const run = async () => {
+      // * Need to space out time to prevent other test keystrokes from interfering with sequence
+      await sleep(250);
+      const spyFcn = createSpy('subscribe', (...args) => {});
+      spectator = createDirective(`<div [hotkeys]="'g>n'" [isSequence]="true"><div contenteditable="true"></div>`);
+      spectator.output('hotkey').subscribe(spyFcn);
+      spyOnProperty(document.activeElement, 'nodeName', 'get').and.returnValue('DIV');
+      spyOnProperty(document.activeElement as HTMLElement, 'isContentEditable', 'get').and.returnValue(true);
+      spectator.dispatchKeyboardEvent(spectator.element.firstElementChild, 'keydown', 'g', spectator.element);
+      spectator.dispatchKeyboardEvent(spectator.element.firstElementChild, 'keydown', 'n', spectator.element);
+      await sleep(250);
+      spectator.fixture.detectChanges();
+      expect(spyFcn).not.toHaveBeenCalled();
+    };
+
+    return run();
+  });
+
+  it('should trigger hotkey when typing in a contentEditable element', () => {
+    const run = async () => {
+      // * Need to space out time to prevent other test keystrokes from interfering with sequence
+      await sleep(250);
+      const spyFcn = createSpy('subscribe', (...args) => {});
+      spectator = createDirective(
+        `<div [hotkeys]="'g>n'" [isSequence]="true" [hotkeysOptions]="{allowIn: ['CONTENTEDITABLE']}"><div contenteditable="true"></div>`
+      );
+      spectator.output('hotkey').subscribe(spyFcn);
+      spyOnProperty(document.activeElement, 'nodeName', 'get').and.returnValue('DIV');
+      spyOnProperty(document.activeElement as HTMLElement, 'isContentEditable', 'get').and.returnValue(true);
+      spectator.dispatchKeyboardEvent(spectator.element.firstElementChild, 'keydown', 'g', spectator.element);
+      spectator.dispatchKeyboardEvent(spectator.element.firstElementChild, 'keydown', 'n', spectator.element);
+      await sleep(250);
+      spectator.fixture.detectChanges();
+      expect(spyFcn).toHaveBeenCalled();
     };
 
     return run();
