@@ -117,7 +117,7 @@ interface Options {
   // The type of event (defaults to `keydown`)
   trigger: 'keydown' | 'keyup';
   // Allow input, textarea and select as key event sources (defaults to []).
-  // It can be 'INPUT', 'TEXTAREA' or 'SELECT'.
+  // It can be 'INPUT', 'TEXTAREA', 'SELECT' or 'CONTENTEDITABLE'.
   allowIn: AllowInElement[];
   // hotkey description
   description: string;
@@ -211,7 +211,7 @@ The pipe accepts and additional parameter the way key combinations are separated
 
 ## Allowing hotkeys in form elements
 
-By default, the library prevents hotkey callbacks from firing when their event originates from an `input`, `select`, or `textarea` element. To enable hotkeys in these elements, specify them in the `allowIn` parameter:
+By default, the library prevents hotkey callbacks from firing when their event originates from an `input`, `select`, or `textarea` element or any elements that are contenteditable. To enable hotkeys in these elements, specify them in the `allowIn` parameter:
 
 ```ts
 import { HotkeysService } from '@ngneat/hotkeys';
@@ -226,7 +226,7 @@ export class AppComponent {
 
   ngOnInit() {
     this.hotkeys
-      .addShortcut({ keys: 'meta.a', allowIn: ['INPUT', 'SELECT', 'TEXTAREA'] })
+      .addShortcut({ keys: 'meta.a', allowIn: ['INPUT', 'SELECT', 'TEXTAREA', 'CONTENTEDITABLE'] })
       .subscribe(e => console.log('Hotkey', e));
   }
 }
@@ -239,7 +239,7 @@ It's possible to enable them in the template as well:
 <input hotkeys="meta.n" 
       hotkeysGroup="File" 
       hotkeysDescription="New Document" 
-      hotkeysOptions="{allowIn: ['INPUT','SELECT', 'TEXTAREA']}" 
+      hotkeysOptions="{allowIn: ['INPUT','SELECT', 'TEXTAREA', 'CONTENTEDITABLE']}" 
       (hotkey)="handleHotkey($event)"
 ```
 
