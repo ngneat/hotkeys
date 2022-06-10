@@ -7,7 +7,6 @@ import { HotkeysDirective } from './hotkeys.directive';
 
 @NgModule({
   declarations: [HotkeysDirective, HotkeysHelpComponent, HotkeysShortcutPipe],
-  entryComponents: [HotkeysHelpComponent],
   imports: [CommonModule],
   exports: [HotkeysDirective, HotkeysHelpComponent, HotkeysShortcutPipe]
 })

@@ -7,10 +7,10 @@
     "declaration": false,
     "downlevelIteration": true,
     "experimentalDecorators": true,
-    "module": "ESNext",
+    "module": "es2020",
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2015",
+    "target": "es2020",
     "lib": ["es2018", "dom"],
     "paths": {
       "@ngneat/hotkeys": ["projects/ngneat/hotkeys/src/public-api.ts"]
