@@ -28,9 +28,17 @@ Web apps are getting closer and closer to be desktop-class applications. With th
 
 ## Table of Contents
 
+- [Compatibility](#compatibility-with-angular-versions)
 - [Installation](#installation)
 - [Usage](#usage)
 - [FAQ](#faq)
+
+## Compatibility with Angular Versions
+
+| @ngneat/hotkeys | Angular |
+| ---                   | ---     |
+| 1.3.x                 | >=14    |
+| 1.2.x                 | <=13    |
 
 ## Installation
 
