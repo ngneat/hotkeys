@@ -7,12 +7,12 @@ import { HotkeysService } from '../hotkeys.service';
 })
 export class HotkeysHelpComponent {
   @Input() title = 'Available Shortcuts';
-  @Output() dimiss = new EventEmitter();
+  @Output() readonly dismiss = new EventEmitter();
   hotkeys = this.hotkeysService.getShortcuts();
 
   constructor(private hotkeysService: HotkeysService) {}
 
   handleDismiss() {
-    this.dimiss.next();
+    this.dismiss.next();
   }
 }

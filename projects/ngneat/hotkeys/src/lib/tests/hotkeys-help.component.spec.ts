@@ -64,7 +64,7 @@ describe('Component: Hotkeys Help', () => {
   it('should trigger dismiss event', () => {
     spectator.fixture.whenStable().then();
     const spyFcn = createSpy('subscribe', e => {});
-    spectator.output('dimiss').subscribe(spyFcn);
+    spectator.output('dismiss').subscribe(spyFcn);
     const query = spectator.query('.hotkeys-help-header-dismiss-button');
     spectator.click(query);
     spectator.fixture.whenStable().then();

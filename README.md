@@ -36,9 +36,9 @@ Web apps are getting closer and closer to be desktop-class applications. With th
 ## Compatibility with Angular Versions
 
 | @ngneat/hotkeys | Angular |
-| ---                   | ---     |
-| 1.3.x                 | >=14    |
-| 1.2.x                 | <=13    |
+| --------------- | ------- |
+| 1.3.x           | >=14    |
+| 1.2.x           | <=13    |
 
 ## Installation
 
@@ -83,13 +83,13 @@ For example:
       hotkeysDescription="New Document" 
       (hotkey)="handleHotkey($event)"
 ```
+
 Example sequence hotkey:
+
 ```html
-<input hotkeys="g>i" 
-      hotkeysGroup="Navigate" 
-      hotkeysDescription="Go to Inbox" 
-      (hotkey)="handleHotkey($event)"
+<input hotkeys="g>i" hotkeysGroup="Navigate" hotkeysDescription="Go to Inbox" (hotkey)="handleHotkey($event)"
 ```
+
 ## Hotkeys Service
 
 This is a global service that can be injected anywhere:
@@ -166,7 +166,7 @@ export class AppComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.hotkeys.registerHelpModal(() => {
       const ref = this.dialog.open(HotkeysHelpComponent, { width: '500px' });
-      ref.componentInstance.dimiss.subscribe(() => ref.close());
+      ref.componentInstance.dismiss.subscribe(() => ref.close());
     });
   }
 }
