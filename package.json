@@ -40,7 +40,7 @@
     "@commitlint/cli": "17.6.6",
     "@commitlint/config-angular": "^17.6.6",
     "@commitlint/config-conventional": "^17.6.6",
-    "@ngneat/spectator": "^10.0.0",
+    "@ngneat/spectator": "^11.3.0",
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^18.16.19",
