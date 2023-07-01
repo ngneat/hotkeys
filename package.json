@@ -12,34 +12,43 @@
     "build:lib": "ng build @ngneat/hotkeys --configuration production",
     "test:lib": "ng test @ngneat/hotkeys",
     "release": "cd projects/ngneat/hotkeys && standard-version --infile ../../../CHANGELOG.md",
-    "test:lib:headless": "cross-env CI=true npm run test:lib"
+    "test:lib:headless": "cross-env CI=true npm run test:lib",
+    "prepare": "husky install"
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^14.0.1",
-    "@angular/cdk": "^14.0.1",
-    "@angular/common": "^14.0.1",
-    "@angular/compiler": "^14.0.1",
-    "@angular/core": "^14.0.1",
-    "@angular/forms": "^14.0.1",
-    "@angular/material": "^14.0.1",
-    "@angular/platform-browser": "^14.0.1",
-    "@angular/platform-browser-dynamic": "^14.0.1",
-    "@angular/router": "^14.0.1",
-    "@ngneat/lib": "^1.0.0",
+    "@angular/animations": "^14.3.0",
+    "@angular/cdk": "^14.2.7",
+    "@angular/common": "^14.3.0",
+    "@angular/compiler": "^14.3.0",
+    "@angular/core": "^14.3.0",
+    "@angular/forms": "^14.3.0",
+    "@angular/material": "^14.2.7",
+    "@angular/platform-browser": "^14.3.0",
+    "@angular/platform-browser-dynamic": "^14.3.0",
+    "@angular/router": "^14.3.0",
+    "@ngneat/lib": "^5.0.0",
     "rxjs": "^6.6.7",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^14.0.1",
-    "@angular/cli": "^14.0.1",
-    "@angular/compiler-cli": "^14.0.1",
-    "@angular/language-service": "^14.0.1",
-    "@types/node": "^12.11.1",
+    "@angular-devkit/build-angular": "^14.2.12",
+    "@angular/cli": "^14.2.12",
+    "@angular/compiler-cli": "^14.3.0",
+    "@angular/language-service": "^14.3.0",
+    "@commitlint/cli": "17.6.6",
+    "@commitlint/config-angular": "^17.6.6",
+    "@commitlint/config-conventional": "^17.6.6",
+    "@ngneat/spectator": "^11.3.0",
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "~2.0.3",
+    "@types/node": "^18.16.19",
+    "all-contributors-cli": "^6.8.1",
     "codelyzer": "^6.0.0",
+    "cross-env": "^7.0.3",
+    "git-cz": "^4.9.0",
+    "husky": "^8.0.0",
     "jasmine-core": "~3.8.0",
     "jasmine-spec-reporter": "~5.0.0",
     "karma": "~6.3.20",
@@ -47,28 +56,14 @@
     "karma-coverage-istanbul-reporter": "~3.0.2",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
-    "ng-packagr": "^14.0.1",
+    "lint-staged": "^13.2.3",
+    "ng-packagr": "^14.2.2",
+    "prettier": "^2.8.8",
     "protractor": "~7.0.0",
+    "standard-version": "^9.5.0",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
-    "typescript": "~4.6.4",
-    "@commitlint/cli": "8.1.0",
-    "@commitlint/config-angular": "^8.1.0",
-    "@commitlint/config-conventional": "^8.1.0",
-    "git-cz": "^3.2.1",
-    "all-contributors-cli": "^6.8.1",
-    "lint-staged": "^9.2.0",
-    "prettier": "^1.18.2",
-    "standard-version": "^6.0.1",
-    "husky": "^3.0.1",
-    "cross-env": "^5.2.0",
-    "@ngneat/spectator": "^10.0.0"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -e $GIT_PARAMS",
-      "pre-commit": "npm run hooks:pre-commit && lint-staged"
-    }
+    "typescript": "~4.8.4"
   },
   "config": {
     "commitizen": {
@@ -77,8 +72,7 @@
   },
   "lint-staged": {
     "*.{js,json,css,scss,ts,html,component.html}": [
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ]
   }
 }
