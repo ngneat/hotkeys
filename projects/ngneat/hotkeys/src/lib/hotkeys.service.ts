@@ -1,8 +1,21 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
 import { EventManager } from '@angular/platform-browser';
-import { EMPTY, fromEvent, Observable, of, Subject, Subscriber, Subscription } from 'rxjs';
-import { debounceTime, filter, finalize, mergeMap, takeUntil, tap } from 'rxjs/operators';
+import {
+  EMPTY,
+  fromEvent,
+  Observable,
+  of,
+  Subject,
+  Subscriber,
+  Subscription,
+  debounceTime,
+  filter,
+  finalize,
+  mergeMap,
+  takeUntil,
+  tap,
+} from 'rxjs';
 
 import { coerceArray } from './utils/array';
 import { hostPlatform, normalizeKeys } from './utils/platform';
@@ -48,7 +61,7 @@ export class HotkeysService {
     group: undefined,
     description: undefined,
     showInHelpMenu: true,
-    preventDefault: true
+    preventDefault: true,
   };
   private callbacks: HotkeyCallback[] = [];
   private sequenceMaps = new Map<HTMLElement, SequenceSummary>();
@@ -119,7 +132,7 @@ export class HotkeysService {
     const getSequenceCompleteObserver = (): Observable<Hotkey> => {
       const hotkeySummary = {
         subject: new Subject<Hotkey>(),
-        hotkey: mergedOptions
+        hotkey: mergedOptions,
       };
 
       if (this.sequenceMaps.has(mergedOptions.element)) {

@@ -1,6 +1,5 @@
 import { Directive, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
-import { merge, Subscription } from 'rxjs';
-import { mergeAll } from 'rxjs/operators';
+import { merge, Subscription, mergeAll } from 'rxjs';
 
 import { AllowInElement, Hotkey, HotkeysService } from './hotkeys.service';
 import { coerceArray } from './utils/array';
@@ -13,7 +12,7 @@ interface Options {
 }
 
 @Directive({
-  selector: '[hotkeys]'
+  selector: '[hotkeys]',
 })
 export class HotkeysDirective implements OnChanges, OnDestroy {
   private subscription: Subscription;
@@ -39,7 +38,7 @@ export class HotkeysDirective implements OnChanges, OnDestroy {
       keys: this.hotkeys,
       group: this.hotkeysGroup,
       description: this.hotkeysDescription,
-      ...this.hotkeysOptions
+      ...this.hotkeysOptions,
     };
 
     this.setHotkeys(hotkey);
