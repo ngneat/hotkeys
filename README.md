@@ -37,6 +37,7 @@ Web apps are getting closer and closer to be desktop-class applications. With th
 
 | @ngneat/hotkeys | Angular |
 | --------------- | ------- |
+| 1.4.x           | >=16    |
 | 1.3.x           | >=14    |
 | 1.2.x           | <=13    |
 
