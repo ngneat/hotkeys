@@ -3,7 +3,7 @@ import { HotkeysService } from '../hotkeys.service';
 
 @Component({
   templateUrl: './hotkeys-help.component.html',
-  styleUrls: ['./hotkeys-help.component.scss']
+  styleUrls: ['./hotkeys-help.component.scss'],
 })
 export class HotkeysHelpComponent {
   @Input() title = 'Available Shortcuts';
@@ -13,6 +13,6 @@ export class HotkeysHelpComponent {
   constructor(private hotkeysService: HotkeysService) {}
 
   handleDismiss() {
-    this.dismiss.next();
+    this.dismiss.next(null);
   }
 }
