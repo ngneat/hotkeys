@@ -1,26 +1,28 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { HotkeysHelpComponent, HotkeysService } from '@ngneat/hotkeys';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements AfterViewInit {
   @ViewChild('input') input: ElementRef<HTMLElement>;
   @ViewChild('input2') input2: ElementRef<HTMLElement>;
   @ViewChild('container') container: ElementRef<HTMLElement>;
 
-  constructor(private hotkeys: HotkeysService, private dialog: MatDialog) {}
+  constructor(
+    private hotkeys: HotkeysService,
+    private modalService: NgbModal,
+  ) {}
 
   ngAfterViewInit(): void {
     const unsubscribe = this.hotkeys.onShortcut((event, keys, t) => console.log(keys));
 
     const helpFcn: () => void = () => {
-      const ref = this.dialog.open(HotkeysHelpComponent, { width: '500px' });
+      const ref = this.modalService.open(HotkeysHelpComponent, { size: 'lg' });
       ref.componentInstance.title = 'Custom Shortcuts Title';
-      ref.componentInstance.dismiss.subscribe(() => ref.close());
     };
 
     this.hotkeys.registerHelpModal(helpFcn);
@@ -30,9 +32,9 @@ export class AppComponent implements AfterViewInit {
         keys: 'g>t',
         description: 'In Code Test',
         preventDefault: false,
-        group: 'Sequencing'
+        group: 'Sequencing',
       })
-      .subscribe(e => {
+      .subscribe((e) => {
         console.log('Test Sequence:', e);
       });
 
@@ -41,9 +43,9 @@ export class AppComponent implements AfterViewInit {
         keys: 'control.b>control.,',
         description: 'Expand All',
         preventDefault: false,
-        group: 'Sequencing'
+        group: 'Sequencing',
       })
-      .subscribe(e => {
+      .subscribe((e) => {
         console.log('Test Sequence:', e);
       });
 
@@ -52,7 +54,7 @@ export class AppComponent implements AfterViewInit {
         keys: 'r>s',
         description: 'Remove this sequence',
         preventDefault: false,
-        group: 'Sequencing'
+        group: 'Sequencing',
       })
       .subscribe(() => {
         this.hotkeys.removeShortcuts('r>s');
@@ -65,34 +67,34 @@ export class AppComponent implements AfterViewInit {
         description: 'Go to Code',
         allowIn: ['INPUT'],
         preventDefault: false,
-        group: 'Repositories'
+        group: 'Repositories',
       })
-      .subscribe(e => console.log('Go to Code', e));
+      .subscribe((e) => console.log('Go to Code', e));
 
     this.hotkeys
       .addShortcut({
         keys: 'control.f',
         element: this.input2.nativeElement,
         description: 'Go to Issues',
-        group: 'Repositories'
+        group: 'Repositories',
       })
-      .subscribe(e => console.log('Go to Issues', e));
+      .subscribe((e) => console.log('Go to Issues', e));
 
     this.hotkeys
       .addShortcut({
         keys: 'shift.r',
         description: 'Jump to line',
-        group: 'Source code browsing'
+        group: 'Source code browsing',
       })
-      .subscribe(e => console.log('Source code browsing', e));
+      .subscribe((e) => console.log('Source code browsing', e));
 
     this.hotkeys
       .addShortcut({
         keys: 'meta.k',
         description: 'Go to notifications',
-        group: 'Site-wide shortcuts'
+        group: 'Site-wide shortcuts',
       })
-      .subscribe(e => console.log('Go to notifications', e));
+      .subscribe((e) => console.log('Go to notifications', e));
   }
 
   handleHotkey(e: KeyboardEvent) {
