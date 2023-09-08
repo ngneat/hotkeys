@@ -1,6 +1,11 @@
 <div class="modal-header">
   <div *ngIf="title" class="hotkeys-help-header">
     <span class="hotkeys-help-header-title">{{ title }}</span>
+    <button
+      type="button"
+      class="hotkeys-help-header-dismiss-button"
+      (click)="activeModal.dismiss('Cross click')"
+    ></button>
   </div>
 </div>
 <div class="modal-body preview-modal-body">

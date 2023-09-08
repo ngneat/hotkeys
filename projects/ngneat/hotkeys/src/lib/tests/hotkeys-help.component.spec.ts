@@ -2,72 +2,83 @@ import { HotkeyGroup, HotkeysHelpComponent, HotkeysService, HotkeysShortcutPipe 
 import { createComponentFactory, Spectator } from '@ngneat/spectator';
 
 import createSpy = jasmine.createSpy;
+import { NgbActiveModal, NgbModal, NgbModalModule, NgbModalRef, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 class HotkeysServiceMock {
   getShortcuts(): HotkeyGroup[] {
     const groups: HotkeyGroup[] = [];
     groups.push({
       group: '',
-      hotkeys: [{ keys: 'a', description: 'shortcut for action A' }]
+      hotkeys: [{ keys: 'a', description: 'shortcut for action A' }],
     });
     groups.push({
       group: 'Group 1',
-      hotkeys: [{ keys: 'meta.b', description: 'shortcut for action B' }]
+      hotkeys: [{ keys: 'meta.b', description: 'shortcut for action B' }],
     });
 
     return groups;
   }
 }
 
+// Mock class for NgbModalRef
+class MockNgbModalRef {
+  componentInstance = {
+    prompt: undefined,
+    title: undefined,
+  };
+  result: Promise<any> = new Promise((resolve, reject) => resolve(true));
+}
+
+class MockNgbActiveModal {
+  close(): void {}
+  dismiss(): void {}
+}
+
 describe('Component: Hotkeys Help', () => {
   let spectator: Spectator<HotkeysHelpComponent>;
+  let ngbModal: NgbModal;
+  let mockModalRef: MockNgbModalRef = new MockNgbModalRef();
+
   const createComponent = createComponentFactory({
     component: HotkeysHelpComponent,
+    imports: [NgbModalModule],
     declarations: [HotkeysShortcutPipe],
-    providers: [{ provide: HotkeysService, useValue: new HotkeysServiceMock() }]
+    providers: [
+      { provide: HotkeysService, useValue: new HotkeysServiceMock() },
+      { provide: NgbActiveModal, useClass: MockNgbActiveModal },
+    ],
   });
 
-  beforeEach(() => (spectator = createComponent()));
+  beforeEach(() => {
+    spectator = createComponent();
+    ngbModal = spectator.inject(NgbModal);
+  });
 
   it('should have two tables', () => {
-    spectator.fixture.whenStable().then();
     const query = spectator.queryAll('.hotkeys-table-help');
     expect(query.length).toBe(2);
   });
 
-  it('should have one table with header', () => {
-    spectator.fixture.whenStable().then();
+  it('should have one table with a header', () => {
     const query = spectator.queryAll('thead');
     expect(query.length).toBe(1);
   });
 
-  it('should have title', () => {
-    spectator.fixture.whenStable().then();
+  it('should have a title', () => {
     const query = spectator.query('.hotkeys-help-header-title');
-    expect(query.innerHTML).toBe('Available Shortcuts');
+    expect(query).toBeTruthy();
+    expect(query.textContent).toBe('Available Shortcuts');
   });
 
-  it('should show custom title', () => {
-    spectator.fixture.whenStable().then();
+  it('should show a custom title', () => {
     spectator.setInput({ title: 'Test title' });
-    spectator.fixture.whenStable().then();
     const query = spectator.query('.hotkeys-help-header-title');
-    expect(query.innerHTML).toBe('Test title');
+    expect(query).toBeTruthy();
+    expect(query.textContent).toBe('Test title');
   });
 
-  it('should have dismiss button', () => {
-    spectator.fixture.whenStable().then();
+  it('should have a dismiss button', () => {
     const query = spectator.query('.hotkeys-help-header-dismiss-button');
-    expect(query).not.toBeNull();
-  });
-
-  it('should trigger dismiss event', () => {
-    spectator.fixture.whenStable().then();
-    const spyFcn = createSpy('subscribe', e => {});
-    spectator.output('dismiss').subscribe(spyFcn);
-    const query = spectator.query('.hotkeys-help-header-dismiss-button');
-    spectator.click(query);
-    spectator.fixture.whenStable().then();
-    expect(spyFcn).toHaveBeenCalled();
+    expect(query).toBeTruthy();
   });
 });
