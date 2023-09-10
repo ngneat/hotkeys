@@ -19,7 +19,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["./node_modules/@angular/material/prebuilt-themes/indigo-pink.css", "src/styles.css"],
+            "styles": ["node_modules/bootstrap/scss/bootstrap.scss", "src/styles.css"],
             "scripts": [],
             "vendorChunk": true,
             "extractLicenses": false,
@@ -84,7 +84,7 @@
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["./node_modules/@angular/material/prebuilt-themes/indigo-pink.css", "src/styles.css"],
+            "styles": ["src/styles.css"],
             "scripts": []
           }
         },

@@ -1,20 +1,27 @@
-<div *ngIf="title" class="hotkeys-help-header">
-  <span class="hotkeys-help-header-title">{{ title }}</span>
-  <button class="hotkeys-help-header-dismiss-button" (click)="handleDismiss()">&#10005;</button>
+<div class="modal-header">
+  <div *ngIf="title" class="hotkeys-help-header">
+    <span class="hotkeys-help-header-title">{{ title }}</span>
+    <button
+      type="button"
+      class="hotkeys-help-header-dismiss-button"
+      (click)="activeModal.dismiss('Cross click')"
+    ></button>
+  </div>
 </div>
-
-<table class="hotkeys-table-help" cellspacing="0" width="100%" *ngFor="let hotkeyGroup of hotkeys">
-  <thead *ngIf="hotkeyGroup.group">
-    <tr>
-      <th class="hotkeys-table-help-group" colspan="2">{{ hotkeyGroup.group }}</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr class="hotkeys-table-help-shortcut" *ngFor="let hotkey of hotkeyGroup.hotkeys">
-      <td class="hotkeys-table-help-shortcut-description" width="50%">{{ hotkey.description }}</td>
-      <td class="hotkeys-table-help-shortcut-keys" width="50%">
-        <kbd [innerHTML]="hotkey.keys | hotkeysShortcut"></kbd>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div class="modal-body preview-modal-body">
+  <table class="hotkeys-table-help" cellspacing="0" width="100%" *ngFor="let hotkeyGroup of hotkeys">
+    <thead *ngIf="hotkeyGroup.group">
+      <tr>
+        <th class="hotkeys-table-help-group" colspan="2">{{ hotkeyGroup.group }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="hotkeys-table-help-shortcut" *ngFor="let hotkey of hotkeyGroup.hotkeys">
+        <td class="hotkeys-table-help-shortcut-description" width="50%">{{ hotkey.description }}</td>
+        <td class="hotkeys-table-help-shortcut-keys" width="50%">
+          <kbd [innerHTML]="hotkey.keys | hotkeysShortcut"></kbd>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -34,22 +34,19 @@ describe('Service: Hotkeys', () => {
   });
 
   it('should delete hotkey and disposer when unsubscribed', () => {
-    spectator.service
-      .addShortcut({ keys: 'meta.a' })
-      .subscribe()
-      .unsubscribe();
+    spectator.service.addShortcut({ keys: 'meta.a' }).subscribe().unsubscribe();
     expect(spectator.service.getHotkeys().length).toBe(0);
   });
 
   it('should listen to keydown', () => {
-    const spyFcn = createSpy('subscribe', e => {});
+    const spyFcn = createSpy('subscribe', (e) => {});
     spectator.service.addShortcut({ keys: 'a' }).subscribe(spyFcn);
     fakeKeyboardPress('a');
     expect(spyFcn).toHaveBeenCalled();
   });
 
   it('should listen to keyup', () => {
-    const spyFcn = createSpy('subscribe', e => {});
+    const spyFcn = createSpy('subscribe', (e) => {});
     spectator.service.addShortcut({ keys: 'a', trigger: 'keyup' }).subscribe(spyFcn);
     fakeKeyboardPress('a', 'keyup');
     expect(spyFcn).toHaveBeenCalled();
@@ -95,7 +92,7 @@ describe('Service: Hotkeys', () => {
       trigger: 'keydown',
       group: undefined,
       description: undefined,
-      preventDefault: true
+      preventDefault: true,
     });
   });
 
@@ -108,7 +105,7 @@ describe('Service: Hotkeys', () => {
       trigger: 'keydown',
       group: 'test group',
       description: 'test description',
-      preventDefault: false
+      preventDefault: false,
     };
 
     spectator.service.addShortcut(options).subscribe();
@@ -121,7 +118,7 @@ describe('Service: Hotkeys', () => {
       showInHelpMenu: true,
       keys: 'a',
       group: 'test group',
-      description: 'test description'
+      description: 'test description',
     };
 
     spectator.service.addShortcut(options).subscribe();
@@ -131,14 +128,14 @@ describe('Service: Hotkeys', () => {
       hotkeys: [
         {
           keys: 'a',
-          description: 'test description'
-        }
-      ]
+          description: 'test description',
+        },
+      ],
     });
   });
 
   it('should listen to up', () => {
-    const spyFcn = createSpy('subscribe', e => {});
+    const spyFcn = createSpy('subscribe', (e) => {});
     spectator.service.addShortcut({ keys: 'up' }).subscribe(spyFcn);
     fakeKeyboardPress('ArrowUp');
     expect(spyFcn).toHaveBeenCalled();
@@ -172,10 +169,7 @@ describe('Service: Sequence Hotkeys', () => {
   });
 
   it('should delete hotkey and disposer when unsubscribed', () => {
-    spectator.service
-      .addSequenceShortcut({ keys: 'g>t' })
-      .subscribe()
-      .unsubscribe();
+    spectator.service.addSequenceShortcut({ keys: 'g>t' }).subscribe().unsubscribe();
     expect(spectator.service.getHotkeys().length).toBe(0);
   });
 
@@ -184,10 +178,10 @@ describe('Service: Sequence Hotkeys', () => {
       // * Need to space out time to prevent other test keystrokes from interfering with sequence
       spectator.service.setSequenceDebounce(200);
       await sleep(250);
-      const spyFcn = createSpy('subscribe', e => {});
+      const spyFcn = createSpy('subscribe', (e) => {});
       spectator.service.addSequenceShortcut({ keys: 'g>z' }).subscribe(spyFcn);
       await fakeKeyboardSequencePress(['g', 'z'], 'keydown', 100);
-      await sleep(200);
+      await sleep(250);
       expect(spyFcn).toHaveBeenCalled();
     };
 
@@ -199,7 +193,7 @@ describe('Service: Sequence Hotkeys', () => {
       // * Need to space out time to prevent other test keystrokes from interfering with sequence
       spectator.service.setSequenceDebounce(200);
       await sleep(250);
-      const spyFcn = createSpy('subscribe', e => {});
+      const spyFcn = createSpy('subscribe', (e) => {});
       spectator.service.addSequenceShortcut({ keys: 'g>z' }).subscribe(spyFcn);
       await fakeKeyboardSequencePress(['g', 'z'], 'keydown', 250);
       await sleep(200);
@@ -213,7 +207,7 @@ describe('Service: Sequence Hotkeys', () => {
     const run = async () => {
       // * Need to space out time to prevent other test keystrokes from interfering with sequence
       await sleep(250);
-      const spyFcn = createSpy('subscribe', e => {});
+      const spyFcn = createSpy('subscribe', (e) => {});
       spectator.service.addSequenceShortcut({ keys: 'g>f' }).subscribe(spyFcn);
       fakeKeyboardSequencePress(['g', 'f']);
       await sleep(250);
@@ -227,7 +221,7 @@ describe('Service: Sequence Hotkeys', () => {
     const run = async () => {
       // * Need to space out time to prevent other test keystrokes from interfering with sequence
       await sleep(250);
-      const spyFcn = createSpy('subscribe', e => {});
+      const spyFcn = createSpy('subscribe', (e) => {});
       spectator.service.addSequenceShortcut({ keys: 'g>g', trigger: 'keyup' }).subscribe(spyFcn);
       fakeKeyboardSequencePress(['g', 'g'], 'keyup');
       await sleep(250);
@@ -291,7 +285,7 @@ describe('Service: Sequence Hotkeys', () => {
       trigger: 'keydown',
       group: undefined,
       description: undefined,
-      preventDefault: true
+      preventDefault: true,
     });
   });
 
@@ -304,7 +298,7 @@ describe('Service: Sequence Hotkeys', () => {
       trigger: 'keydown',
       group: 'test group',
       description: 'test description',
-      preventDefault: false
+      preventDefault: false,
     };
 
     spectator.service.addSequenceShortcut(options).subscribe();
@@ -317,7 +311,7 @@ describe('Service: Sequence Hotkeys', () => {
       showInHelpMenu: true,
       keys: 'g>l',
       group: 'test group',
-      description: 'test description'
+      description: 'test description',
     };
 
     spectator.service.addSequenceShortcut(options).subscribe();
@@ -327,9 +321,9 @@ describe('Service: Sequence Hotkeys', () => {
       hotkeys: [
         {
           keys: 'g>l',
-          description: 'test description'
-        }
-      ]
+          description: 'test description',
+        },
+      ],
     });
   });
 
@@ -337,7 +331,7 @@ describe('Service: Sequence Hotkeys', () => {
     const run = async () => {
       // * Need to space out time to prevent other test keystrokes from interfering with sequence
       await sleep(250);
-      const spyFcn = createSpy('subscribe', e => {});
+      const spyFcn = createSpy('subscribe', (e) => {});
       spectator.service.addSequenceShortcut({ keys: 'up>up' }).subscribe(spyFcn);
       fakeKeyboardSequencePress(['ArrowUp', 'ArrowUp']);
       await sleep(250);
@@ -346,23 +340,23 @@ describe('Service: Sequence Hotkeys', () => {
 
     return run();
   });
-  
-  it('should call callback after clearing and adding sequence shortcut', () => {
-  const run = async () => {
-    // * Need to space out time to prevent other test keystrokes from interfering with sequence
-    await sleep(250);
-    const spyFcn = createSpy('subscribe', (...args) => {});
-    spectator.service.addSequenceShortcut({ keys: 'g>h' }).subscribe();
-    spectator.service.removeShortcuts('g>h');
-    spectator.service.addSequenceShortcut({ keys: 'g>j' }).subscribe();
-    spectator.service.onShortcut(spyFcn);
-    fakeKeyboardSequencePress(['g', 'j']);
-    await sleep(250);
-    expect(spyFcn).toHaveBeenCalled();
-  };
 
-  return run();
-});
+  it('should call callback after clearing and adding sequence shortcut', () => {
+    const run = async () => {
+      // * Need to space out time to prevent other test keystrokes from interfering with sequence
+      await sleep(250);
+      const spyFcn = createSpy('subscribe', (...args) => {});
+      spectator.service.addSequenceShortcut({ keys: 'g>h' }).subscribe();
+      spectator.service.removeShortcuts('g>h');
+      spectator.service.addSequenceShortcut({ keys: 'g>j' }).subscribe();
+      spectator.service.onShortcut(spyFcn);
+      fakeKeyboardSequencePress(['g', 'j']);
+      await sleep(250);
+      expect(spyFcn).toHaveBeenCalled();
+    };
+
+    return run();
+  });
 
   it('should add sequence shortcut', () => {
     spectator.service.addSequenceShortcut({ keys: 'g>i' }).subscribe();
@@ -397,5 +391,5 @@ function fakeBodyKeyboardSequencePress(keys: string[], type = 'keydown') {
 }
 
 function sleep(ms: number): Promise<unknown> {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

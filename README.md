@@ -37,6 +37,7 @@ Web apps are getting closer and closer to be desktop-class applications. With th
 
 | @ngneat/hotkeys | Angular |
 | --------------- | ------- |
+| 1.4.x           | >=16    |
 | 1.3.x           | >=14    |
 | 1.2.x           | <=13    |
 
@@ -152,7 +153,7 @@ unsubscribe();
 Display a help dialog listing all visible hotkeys:
 
 ```ts
-import { MatDialog } from '@angular/material/dialog';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { HotkeysHelpComponent, HotkeysService } from '@ngneat/hotkeys';
 
 @Component({
@@ -161,12 +162,12 @@ import { HotkeysHelpComponent, HotkeysService } from '@ngneat/hotkeys';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements AfterViewInit {
-  constructor(private hotkeys: HotkeysService, private dialog: MatDialog) {}
+  constructor(private hotkeys: HotkeysService, private dialog: NgbModal) {}
 
   ngAfterViewInit() {
     this.hotkeys.registerHelpModal(() => {
-      const ref = this.dialog.open(HotkeysHelpComponent, { width: '500px' });
-      ref.componentInstance.dismiss.subscribe(() => ref.close());
+      const ref = this.modalService.open(HotkeysHelpComponent, { size: 'lg' });
+      ref.componentInstance.title = 'Custom Shortcuts Title';
     });
   }
 }
