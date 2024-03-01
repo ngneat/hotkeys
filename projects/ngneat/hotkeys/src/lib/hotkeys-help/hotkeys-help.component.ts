@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { HotkeysService } from '../hotkeys.service';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   templateUrl: './hotkeys-help.component.html',
@@ -11,12 +10,9 @@ export class HotkeysHelpComponent {
   @Output() readonly dismiss = new EventEmitter();
   hotkeys = this.hotkeysService.getShortcuts();
 
-  constructor(
-    private hotkeysService: HotkeysService,
-    public activeModal: NgbActiveModal,
-  ) {}
+  constructor(private hotkeysService: HotkeysService) {}
 
   handleDismiss() {
-    this.dismiss.next(null);
+    this.dismiss.emit();
   }
 }

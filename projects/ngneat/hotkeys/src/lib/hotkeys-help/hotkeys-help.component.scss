@@ -43,7 +43,6 @@
 
   .hotkeys-help-header {
     font-size: 1.25em;
-    margin-bottom: 1.25em;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -57,7 +56,7 @@
   .hotkeys-help-header-dismiss-button {
     border: none;
     font-size: 18px;
-    color: #9e9e9e;
+    background: transparent;
     cursor: pointer;
     &:focus {
       outline: none;
