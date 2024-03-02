@@ -1,12 +1,8 @@
 <div class="modal-header">
   <div *ngIf="title" class="hotkeys-help-header">
     <span class="hotkeys-help-header-title">{{ title }}</span>
-    <button
-      type="button"
-      class="hotkeys-help-header-dismiss-button"
-      (click)="activeModal.dismiss('Cross click')"
-    ></button>
   </div>
+  <button type="button" class="hotkeys-help-header-dismiss-button" (click)="handleDismiss()">&#x2715;</button>
 </div>
 <div class="modal-body preview-modal-body">
   <table class="hotkeys-table-help" cellspacing="0" width="100%" *ngFor="let hotkeyGroup of hotkeys">

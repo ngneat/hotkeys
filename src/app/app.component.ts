@@ -23,6 +23,7 @@ export class AppComponent implements AfterViewInit {
     const helpFcn: () => void = () => {
       const ref = this.modalService.open(HotkeysHelpComponent, { size: 'lg' });
       ref.componentInstance.title = 'Custom Shortcuts Title';
+      ref.componentInstance.dismiss.subscribe(() => ref.close());
     };
 
     this.hotkeys.registerHelpModal(helpFcn);
