@@ -1,23 +1,31 @@
 <div class="modal-header">
-  <div *ngIf="title" class="hotkeys-help-header">
-    <span class="hotkeys-help-header-title">{{ title }}</span>
-  </div>
+  @if (title) {
+    <div class="hotkeys-help-header">
+      <span class="hotkeys-help-header-title">{{ title }}</span>
+    </div>
+  }
   <button type="button" class="hotkeys-help-header-dismiss-button" (click)="handleDismiss()">&#x2715;</button>
 </div>
 <div class="modal-body preview-modal-body">
-  <table class="hotkeys-table-help" cellspacing="0" width="100%" *ngFor="let hotkeyGroup of hotkeys">
-    <thead *ngIf="hotkeyGroup.group">
-      <tr>
-        <th class="hotkeys-table-help-group" colspan="2">{{ hotkeyGroup.group }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="hotkeys-table-help-shortcut" *ngFor="let hotkey of hotkeyGroup.hotkeys">
-        <td class="hotkeys-table-help-shortcut-description" width="50%">{{ hotkey.description }}</td>
-        <td class="hotkeys-table-help-shortcut-keys" width="50%">
-          <kbd [innerHTML]="hotkey.keys | hotkeysShortcut"></kbd>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  @for (hotkeyGroup of hotkeys; track $index) {
+    <table class="hotkeys-table-help">
+      @if (hotkeyGroup.group) {
+        <thead>
+          <tr>
+            <th class="hotkeys-table-help-group" colspan="2">{{ hotkeyGroup.group }}</th>
+          </tr>
+        </thead>
+      }
+      <tbody>
+        @for (hotkey of hotkeyGroup.hotkeys; track hotkey) {
+          <tr class="hotkeys-table-help-shortcut">
+            <td class="hotkeys-table-help-shortcut-description">{{ hotkey.description }}</td>
+            <td class="hotkeys-table-help-shortcut-keys">
+              <kbd [innerHTML]="hotkey.keys | hotkeysShortcut"></kbd>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
 </div>

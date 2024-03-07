@@ -11,24 +11,25 @@ const symbols = {
   right: '&#8594;',
   up: '&#8593;',
   down: '&#8595;',
-  enter: '&#8996;'
+  enter: '&#8996;',
 };
 
 const appleSymbols = {
   meta: '&#8984;',
   altleft: '&#8997;',
   control: '&#8963;',
-  escape: '&#9099;'
+  escape: '&#9099;',
 };
 
 const pcSymbols = {
   control: 'Ctrl',
   altleft: 'Alt',
-  escape: 'Esc'
+  escape: 'Esc',
 };
 
 @Pipe({
-  name: 'hotkeysShortcut'
+  standalone: true,
+  name: 'hotkeysShortcut',
 })
 export class HotkeysShortcutPipe implements PipeTransform {
   private readonly symbols;
@@ -43,12 +44,12 @@ export class HotkeysShortcutPipe implements PipeTransform {
     }
     return value
       .split('>')
-      .map(s =>
+      .map((s) =>
         s
           .split('.')
-          .map(c => c.toLowerCase())
-          .map(c => this.symbols[c] || c)
-          .join(dotSeparator)
+          .map((c) => c.toLowerCase())
+          .map((c) => this.symbols[c] || c)
+          .join(dotSeparator),
       )
       .join(thenSeparator);
   }

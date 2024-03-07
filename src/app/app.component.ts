@@ -1,24 +1,24 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, viewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { HotkeysHelpComponent, HotkeysService } from '@ngneat/hotkeys';
+import { HotkeysDirective, HotkeysHelpComponent, HotkeysService } from '@ngneat/hotkeys';
 
 @Component({
+  standalone: true,
   selector: 'app-root',
+  imports: [HotkeysDirective],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements AfterViewInit {
-  @ViewChild('input') input: ElementRef<HTMLElement>;
-  @ViewChild('input2') input2: ElementRef<HTMLElement>;
-  @ViewChild('container') container: ElementRef<HTMLElement>;
-
-  constructor(
-    private hotkeys: HotkeysService,
-    private modalService: NgbModal,
-  ) {}
+  private hotkeys = inject(HotkeysService);
+  private modalService = inject(NgbModal);
+  input = viewChild<ElementRef<HTMLElement>>('input');
+  input2 = viewChild<ElementRef<HTMLElement>>('input2');
+  input3 = viewChild<ElementRef<HTMLElement>>('input3');
+  container = viewChild<ElementRef<HTMLElement>>('container');
 
   ngAfterViewInit(): void {
-    const unsubscribe = this.hotkeys.onShortcut((event, keys, t) => console.log(keys));
+    this.hotkeys.onShortcut((event, keys) => console.log(keys));
 
     const helpFcn: () => void = () => {
       const ref = this.modalService.open(HotkeysHelpComponent, { size: 'lg' });
@@ -64,7 +64,7 @@ export class AppComponent implements AfterViewInit {
     this.hotkeys
       .addShortcut({
         keys: 'meta.g',
-        element: this.input.nativeElement,
+        element: this.input().nativeElement,
         description: 'Go to Code',
         allowIn: ['INPUT'],
         preventDefault: false,
@@ -75,7 +75,7 @@ export class AppComponent implements AfterViewInit {
     this.hotkeys
       .addShortcut({
         keys: 'control.f',
-        element: this.input2.nativeElement,
+        element: this.input2().nativeElement,
         description: 'Go to Issues',
         group: 'Repositories',
       })

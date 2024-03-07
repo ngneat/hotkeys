@@ -1,8 +1,7 @@
 import { HotkeyGroup, HotkeysHelpComponent, HotkeysService, HotkeysShortcutPipe } from '@ngneat/hotkeys';
 import { createComponentFactory, Spectator } from '@ngneat/spectator';
 
-import createSpy = jasmine.createSpy;
-import { NgbActiveModal, NgbModal, NgbModalModule, NgbModalRef, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 
 class HotkeysServiceMock {
   getShortcuts(): HotkeyGroup[] {
@@ -20,15 +19,6 @@ class HotkeysServiceMock {
   }
 }
 
-// Mock class for NgbModalRef
-class MockNgbModalRef {
-  componentInstance = {
-    prompt: undefined,
-    title: undefined,
-  };
-  result: Promise<any> = new Promise((resolve, reject) => resolve(true));
-}
-
 class MockNgbActiveModal {
   close(): void {}
   dismiss(): void {}
@@ -37,12 +27,10 @@ class MockNgbActiveModal {
 describe('Component: Hotkeys Help', () => {
   let spectator: Spectator<HotkeysHelpComponent>;
   let ngbModal: NgbModal;
-  let mockModalRef: MockNgbModalRef = new MockNgbModalRef();
 
   const createComponent = createComponentFactory({
     component: HotkeysHelpComponent,
-    imports: [NgbModalModule],
-    declarations: [HotkeysShortcutPipe],
+    imports: [NgbModalModule, HotkeysShortcutPipe],
     providers: [
       { provide: HotkeysService, useValue: new HotkeysServiceMock() },
       { provide: NgbActiveModal, useClass: MockNgbActiveModal },
