@@ -61,14 +61,14 @@ export class AppModule {}
 ```
 
 ### Standalone
-Add `HotkeysService` in your `ApplicationConfig` providers:
+Add `HotkeysService` in the standalone components :
 
 ```ts
-import {HotkeysService} from "@ngneat/hotkeys";
-
-bootstrapApplication(AppComponent, {
-  providers: [HotkeysService]
+@Component({
+  standalone: true,
+  imports: [HotkeysDirective],
 })
+export class AppComponent {}
 ```
 
 Now you have two ways to start adding shortcuts to your application:

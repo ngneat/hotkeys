@@ -8,7 +8,7 @@ import { coerceArray } from './utils/array';
 import { hostPlatform, normalizeKeys } from './utils/platform';
 
 export type AllowInElement = 'INPUT' | 'TEXTAREA' | 'SELECT' | 'CONTENTEDITABLE';
-interface Options {
+export type Options = {
   group: string;
   element: HTMLElement;
   trigger: 'keydown' | 'keyup';
@@ -16,7 +16,7 @@ interface Options {
   description: string;
   showInHelpMenu: boolean;
   preventDefault: boolean;
-}
+};
 
 export interface HotkeyGroup {
   group: string;
@@ -48,19 +48,22 @@ export class HotkeysService {
     group: undefined,
     description: undefined,
     showInHelpMenu: true,
-    preventDefault: true
+    preventDefault: true,
   };
   private callbacks: HotkeyCallback[] = [];
   private sequenceMaps = new Map<HTMLElement, SequenceSummary>();
   private sequenceDebounce: number = 250;
 
-  constructor(private eventManager: EventManager, @Inject(DOCUMENT) private document: Document) {}
+  constructor(
+    private eventManager: EventManager,
+    @Inject(DOCUMENT) private document: Document,
+  ) {}
 
   getHotkeys(): Hotkey[] {
     const sequenceKeys = Array.from(this.sequenceMaps.values())
-      .map(s => [s.hotkeyMap].reduce((_acc, val) => [...val.values()], []))
+      .map((s) => [s.hotkeyMap].reduce((_acc, val) => [...val.values()], []))
       .reduce((_x, y) => y, [])
-      .map(h => h.hotkey);
+      .map((h) => h.hotkey);
 
     return Array.from(this.hotkeys.values()).concat(sequenceKeys);
   }
@@ -74,7 +77,7 @@ export class HotkeysService {
         continue;
       }
 
-      let group = groups.find(g => g.group === hotkey.group);
+      let group = groups.find((g) => g.group === hotkey.group);
       if (!group) {
         group = { group: hotkey.group, hotkeys: [] };
         groups.push(group);
@@ -92,10 +95,10 @@ export class HotkeysService {
       let sequence = '';
       return fromEvent<KeyboardEvent>(element, eventName).pipe(
         tap(
-          e =>
+          (e) =>
             (sequence = `${sequence}${sequence ? '>' : ''}${e.ctrlKey ? 'control.' : ''}${e.altKey ? 'alt.' : ''}${
               e.shiftKey ? 'shift.' : ''
-            }${e.key}`)
+            }${e.key}`),
         ),
         debounceTime(this.sequenceDebounce),
         mergeMap(() => {
@@ -109,7 +112,7 @@ export class HotkeysService {
           } else {
             return EMPTY;
           }
-        })
+        }),
       );
     };
 
@@ -119,7 +122,7 @@ export class HotkeysService {
     const getSequenceCompleteObserver = (): Observable<Hotkey> => {
       const hotkeySummary = {
         subject: new Subject<Hotkey>(),
-        hotkey: mergedOptions
+        hotkey: mergedOptions,
       };
 
       if (this.sequenceMaps.has(mergedOptions.element)) {
@@ -144,10 +147,10 @@ export class HotkeysService {
     };
 
     return getSequenceCompleteObserver().pipe(
-      takeUntil<Hotkey>(this.dispose.pipe(filter(v => v === normalizedKeys))),
-      filter(hotkey => !this.targetIsExcluded(hotkey.allowIn)),
-      tap(hotkey => this.callbacks.forEach(cb => cb(hotkey, normalizedKeys, hotkey.element))),
-      finalize(() => this.removeShortcuts(normalizedKeys))
+      takeUntil<Hotkey>(this.dispose.pipe(filter((v) => v === normalizedKeys))),
+      filter((hotkey) => !this.targetIsExcluded(hotkey.allowIn)),
+      tap((hotkey) => this.callbacks.forEach((cb) => cb(hotkey, normalizedKeys, hotkey.element))),
+      finalize(() => this.removeShortcuts(normalizedKeys)),
     );
   }
 
@@ -163,7 +166,7 @@ export class HotkeysService {
     this.hotkeys.set(normalizedKeys, mergedOptions);
     const event = `${mergedOptions.trigger}.${normalizedKeys}`;
 
-    return new Observable(observer => {
+    return new Observable((observer) => {
       const handler = (e: KeyboardEvent) => {
         const hotkey = this.hotkeys.get(normalizedKeys);
         const skipShortcutTrigger = this.targetIsExcluded(hotkey.allowIn);
@@ -176,7 +179,7 @@ export class HotkeysService {
           e.preventDefault();
         }
 
-        this.callbacks.forEach(cb => cb(e, normalizedKeys, hotkey.element));
+        this.callbacks.forEach((cb) => cb(e, normalizedKeys, hotkey.element));
         observer.next(e);
       };
       const dispose = this.eventManager.addEventListener(mergedOptions.element, event, handler);
@@ -185,12 +188,12 @@ export class HotkeysService {
         this.hotkeys.delete(normalizedKeys);
         dispose();
       };
-    }).pipe(takeUntil<KeyboardEvent>(this.dispose.pipe(filter(v => v === normalizedKeys))));
+    }).pipe(takeUntil<KeyboardEvent>(this.dispose.pipe(filter((v) => v === normalizedKeys))));
   }
 
   removeShortcuts(hotkeys: string | string[]): void {
-    const coercedHotkeys = coerceArray(hotkeys).map(hotkey => normalizeKeys(hotkey, hostPlatform()));
-    coercedHotkeys.forEach(hotkey => {
+    const coercedHotkeys = coerceArray(hotkeys).map((hotkey) => normalizeKeys(hotkey, hostPlatform()));
+    coercedHotkeys.forEach((hotkey) => {
       this.hotkeys.delete(hotkey);
       this.dispose.next(hotkey);
 
@@ -218,19 +221,21 @@ export class HotkeysService {
   onShortcut(callback: HotkeyCallback): () => void {
     this.callbacks.push(callback);
 
-    return () => (this.callbacks = this.callbacks.filter(cb => cb !== callback));
+    return () => (this.callbacks = this.callbacks.filter((cb) => cb !== callback));
   }
 
   registerHelpModal(openHelpModalFn: () => void, helpShortcut: string = '') {
-    this.addShortcut({ keys: helpShortcut || 'shift.?', showInHelpMenu: false, preventDefault: false }).subscribe(e => {
-      const skipMenu =
-        /^(input|textarea|select)$/i.test(document.activeElement.nodeName) ||
-        (e.target as HTMLElement).isContentEditable;
+    this.addShortcut({ keys: helpShortcut || 'shift.?', showInHelpMenu: false, preventDefault: false }).subscribe(
+      (e) => {
+        const skipMenu =
+          /^(input|textarea|select)$/i.test(document.activeElement.nodeName) ||
+          (e.target as HTMLElement).isContentEditable;
 
-      if (!skipMenu && this.hotkeys.size) {
-        openHelpModalFn();
-      }
-    });
+        if (!skipMenu && this.hotkeys.size) {
+          openHelpModalFn();
+        }
+      },
+    );
   }
 
   private targetIsExcluded(allowIn?: AllowInElement[]) {
