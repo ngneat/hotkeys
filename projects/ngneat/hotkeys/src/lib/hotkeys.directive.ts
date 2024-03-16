@@ -1,12 +1,12 @@
 import {
   computed,
-  DestroyRef,
   Directive,
   ElementRef,
   EventEmitter,
   inject,
   input,
   OnChanges,
+  OnDestroy,
   Output,
   SimpleChanges,
 } from '@angular/core';
@@ -15,7 +15,6 @@ import { mergeAll } from 'rxjs/operators';
 
 import { Hotkey, HotkeysService, Options as ServiceOptions } from './hotkeys.service';
 import { coerceArray } from './utils/array';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 type Options = Omit<ServiceOptions, 'group' | 'element' | 'description'>;
 
@@ -23,8 +22,7 @@ type Options = Omit<ServiceOptions, 'group' | 'element' | 'description'>;
   standalone: true,
   selector: '[hotkeys]',
 })
-export class HotkeysDirective implements OnChanges {
-  private destroyRef = inject(DestroyRef);
+export class HotkeysDirective implements OnChanges, OnDestroy {
   private hotkeysService = inject(HotkeysService);
   private elementRef = inject(ElementRef);
   private subscription: Subscription;
@@ -44,16 +42,23 @@ export class HotkeysDirective implements OnChanges {
   }));
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-    this.subscription = null;
-
+    this.deleteHotkeys();
     if (!this.hotkeys) {
       return;
     }
 
     this.setHotkeys(this._hotkey());
+  }
+
+  ngOnDestroy() {
+    this.deleteHotkeys();
+  }
+
+  private deleteHotkeys() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+    this.subscription = null;
   }
 
   private setHotkeys(hotkeys: Hotkey | Hotkey[]) {
@@ -65,7 +70,7 @@ export class HotkeysDirective implements OnChanges {
           : this.hotkeysService.addShortcut({ ...hotkey, element: this.elementRef.nativeElement });
       }),
     )
-      .pipe(takeUntilDestroyed(this.destroyRef), mergeAll())
+      .pipe(mergeAll())
       .subscribe((e) => this.hotkey.next(e));
   }
 }
