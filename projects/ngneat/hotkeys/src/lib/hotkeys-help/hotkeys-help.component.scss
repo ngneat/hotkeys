@@ -9,7 +9,6 @@
 
   th {
     background-color: #f6f8fa;
-    border-width: 0 0 1px;
     border-top-left-radius: 2px;
     border-top-right-radius: 2px;
     border: 1px solid #d1d5da;
@@ -41,12 +40,13 @@
     text-align: right;
   }
 
-  .hotkeys-help-header {
-    font-size: 1.25em;
-    display: flex;
-    flex-direction: row;
+  .modal-header {
     justify-content: space-between;
     align-items: center;
+  }
+
+  .hotkeys-help-header {
+    font-size: 1.25em;
   }
 
   .hotkeys-help-header-title {

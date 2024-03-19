@@ -4,7 +4,7 @@
     placeholder="meta.a"
     hotkeys="meta.a"
     (hotkey)="handleHotkey($event)"
-    [hotkeysOptions]="{ preventDefault: false, trigger: 'keyup', showInHelpMenu: false, allowIn: ['input'] }"
+    [hotkeysOptions]="{ preventDefault: false, trigger: 'keyup', showInHelpMenu: false, allowIn: ['INPUT'] }"
   />
 
   <input
@@ -14,7 +14,7 @@
     (hotkey)="handleHotkey($event)"
     hotkeysDescription="Switch branch/tag"
     hotkeysGroup="Source code browsing"
-    [hotkeysOptions]="{ allowIn: ['input'] }"
+    [hotkeysOptions]="{ allowIn: ['INPUT'] }"
   />
 
   <input
@@ -24,7 +24,7 @@
     (hotkey)="handleHotkey($event)"
     hotkeysDescription="Directive Test"
     hotkeysGroup="Sequencing"
-    [hotkeysOptions]="{ allowIn: ['input'] }"
+    [hotkeysOptions]="{ allowIn: ['INPUT'] }"
     [isSequence]="true"
   />
 </div>

@@ -1,33 +1,45 @@
-import { Directive, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import {
+  computed,
+  Directive,
+  ElementRef,
+  EventEmitter,
+  inject,
+  input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { merge, Subscription } from 'rxjs';
 import { mergeAll } from 'rxjs/operators';
 
-import { AllowInElement, Hotkey, HotkeysService } from './hotkeys.service';
+import { Hotkey, HotkeysService, Options as ServiceOptions } from './hotkeys.service';
 import { coerceArray } from './utils/array';
 
-interface Options {
-  trigger: 'keydown' | 'keyup';
-  allowIn: AllowInElement[];
-  showInHelpMenu: boolean;
-  preventDefault: boolean;
-}
+type Options = Omit<ServiceOptions, 'group' | 'element' | 'description'>;
 
 @Directive({
-  selector: '[hotkeys]'
+  standalone: true,
+  selector: '[hotkeys]',
 })
 export class HotkeysDirective implements OnChanges, OnDestroy {
+  private hotkeysService = inject(HotkeysService);
+  private elementRef = inject(ElementRef);
   private subscription: Subscription;
 
-  constructor(private hotkeysService: HotkeysService, private elementRef: ElementRef) {}
+  hotkeys = input<string>();
+  isSequence = input(false);
+  hotkeysGroup = input<string>();
+  hotkeysOptions = input<Partial<Options>>({});
+  hotkeysDescription = input<string>();
+  @Output() hotkey = new EventEmitter<KeyboardEvent | Hotkey>();
 
-  @Input() hotkeys: string;
-  @Input() isSequence: boolean = false;
-  @Input() hotkeysGroup: string;
-  @Input() hotkeysOptions: Partial<Options> = {};
-  @Input() hotkeysDescription: string;
-
-  @Output()
-  hotkey = new EventEmitter<KeyboardEvent | Hotkey>();
+  private _hotkey = computed(() => ({
+    keys: this.hotkeys(),
+    group: this.hotkeysGroup(),
+    description: this.hotkeysDescription(),
+    ...this.hotkeysOptions(),
+  }));
 
   ngOnChanges(changes: SimpleChanges): void {
     this.deleteHotkeys();
@@ -35,14 +47,7 @@ export class HotkeysDirective implements OnChanges, OnDestroy {
       return;
     }
 
-    const hotkey: Hotkey = {
-      keys: this.hotkeys,
-      group: this.hotkeysGroup,
-      description: this.hotkeysDescription,
-      ...this.hotkeysOptions
-    };
-
-    this.setHotkeys(hotkey);
+    this.setHotkeys(this._hotkey());
   }
 
   ngOnDestroy() {
@@ -59,13 +64,13 @@ export class HotkeysDirective implements OnChanges, OnDestroy {
   private setHotkeys(hotkeys: Hotkey | Hotkey[]) {
     const coercedHotkeys = coerceArray(hotkeys);
     this.subscription = merge(
-      coercedHotkeys.map(hotkey => {
-        return this.isSequence
+      coercedHotkeys.map((hotkey) => {
+        return this.isSequence()
           ? this.hotkeysService.addSequenceShortcut({ ...hotkey, element: this.elementRef.nativeElement })
           : this.hotkeysService.addShortcut({ ...hotkey, element: this.elementRef.nativeElement });
-      })
+      }),
     )
       .pipe(mergeAll())
-      .subscribe(e => this.hotkey.next(e));
+      .subscribe((e) => this.hotkey.next(e));
   }
 }

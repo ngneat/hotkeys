@@ -1,8 +1,8 @@
 export type Platform = 'apple' | 'pc';
 
 export function hostPlatform(): Platform {
-  const appleDevices = ['Mac', 'iPhone', 'iPad', 'iPhone'];
-  return appleDevices.some(d => navigator.platform.includes(d)) ? 'apple' : 'pc';
+  const appleDevices = ['Mac', 'iPhone', 'iPad'];
+  return appleDevices.some((d) => navigator.userAgent.includes(d)) ? 'apple' : 'pc';
 }
 
 export function normalizeKeys(keys: string, platform: Platform): string {
@@ -10,7 +10,7 @@ export function normalizeKeys(keys: string, platform: Platform): string {
     up: 'ArrowUp',
     down: 'ArrowDown',
     left: 'ArrowLeft',
-    right: 'ArrowRight'
+    right: 'ArrowRight',
   };
 
   function transform(key: string): string {
@@ -28,11 +28,6 @@ export function normalizeKeys(keys: string, platform: Platform): string {
   return keys
     .toLowerCase()
     .split('>')
-    .map(s =>
-      s
-        .split('.')
-        .map(transform)
-        .join('.')
-    )
+    .map((s) => s.split('.').map(transform).join('.'))
     .join('>');
 }

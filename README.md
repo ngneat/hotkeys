@@ -36,7 +36,8 @@ Web apps are getting closer and closer to be desktop-class applications. With th
 ## Compatibility with Angular Versions
 
 | @ngneat/hotkeys | Angular |
-| --------------- | ------- |
+|-----------------|---------|
+| 3.x.x           | >=17.2  |
 | 2.x.x           | >=16    |
 | 1.3.x           | >=14    |
 | 1.2.x           | <=13    |
@@ -47,6 +48,7 @@ Web apps are getting closer and closer to be desktop-class applications. With th
 
 ## Usage
 
+### Module
 Add `HotkeysModule` in your `AppModule`:
 
 ```ts
@@ -56,6 +58,17 @@ import { HotkeysModule } from '@ngneat/hotkeys';
   imports: [HotkeysModule]
 })
 export class AppModule {}
+```
+
+### Standalone
+Add `HotkeysService` in the standalone components :
+
+```ts
+@Component({
+  standalone: true,
+  imports: [HotkeysDirective],
+})
+export class AppComponent {}
 ```
 
 Now you have two ways to start adding shortcuts to your application:
@@ -137,7 +150,7 @@ interface Options {
 }
 ```
 
-#### `onShortcut`
+### `onShortcut`
 
 Listen to any registered hotkey. For example:
 
@@ -148,7 +161,7 @@ const unsubscribe = this.hotkeys.onShortcut((event, key, target) => console.log(
 unsubscribe();
 ```
 
-#### `registerHelpModal`
+### `registerHelpModal`
 
 Display a help dialog listing all visible hotkeys:
 
@@ -175,14 +188,15 @@ export class AppComponent implements AfterViewInit {
 ```
 
 It accepts a second input that allows defining the hotkey that should open the dialog. The default shortcut is `Shift + ?`. Here's how `HotkeysHelpComponent` looks like:
-
+```
 <p align="center">
  <img width="50%" height="50%" src="./help_screenshot.png">
 </p>
+```
 
 You can also provide a custom component. To help you with that, the service exposes the `getShortcuts` method.
 
-#### `removeShortcuts`
+### `removeShortcuts`
 
 Remove previously registered shortcuts.
 
@@ -193,7 +207,7 @@ this.hotkeys.removeShortcuts('meta.a');
 this.hotkeys.removeShortcuts(['meta.1', 'meta.2']);
 ```
 
-#### `setSequenceDebounce`
+### `setSequenceDebounce`
 
 Set the number of milliseconds to debounce a sequence of keys
 
