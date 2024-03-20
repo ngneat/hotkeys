@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0](https://github.com/ngneat/hotkeys/compare/v2.0.0...v4.0.0) (2024-03-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* Angular v17 is required
+* **dependencies:** **
+
+### Bug Fixes
+
+* **dependencies:** removing @ng-bootstrap/ng-bootstrap ([ef30dec](https://github.com/ngneat/hotkeys/commit/ef30dec1c2ae42f17789be84272269c46291cb6d)), closes [#89](https://github.com/ngneat/hotkeys/issues/89)
+* **release:** bump all dependencies to latest ([17f74c6](https://github.com/ngneat/hotkeys/commit/17f74c60567e16248af7c6f9dd6a537559663929))
+* **release:** update to angular 17 and bump all dependencies to latest ([26a6048](https://github.com/ngneat/hotkeys/commit/26a6048b33f1c3a75b870253b7dc69377fae9151))
+* **release:** update to angular 17 and bump all dependencies to latest ([5323d0c](https://github.com/ngneat/hotkeys/commit/5323d0cbc38279a2a502f794a3c278a32d80adbb))
+* **release:** update to angular 17 and bump all dependencies to latest ([234edd9](https://github.com/ngneat/hotkeys/commit/234edd98c864ce3f8978f1f0f92ef425368a6f7f))
+* **release:** update to angular 17 and bump all dependencies to latest ([3d17db6](https://github.com/ngneat/hotkeys/commit/3d17db65d74312aff7c8f710c52104d73131ff9f))
+
+
+* Merge pull request #91 from Pilpin/master ([1ff0709](https://github.com/ngneat/hotkeys/commit/1ff0709a83b8edf97c6d6b7de59e4514d3353797)), closes [#91](https://github.com/ngneat/hotkeys/issues/91)
+
 ## [2.0.0](https://github.com/ngneat/hotkeys/compare/v1.2.0...v2.0.0) (2023-09-11)
 
 
