@@ -1,6 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 import { hostPlatform } from './utils/platform';
+import { CustomAliases } from './utils/alias';
 
 const symbols = {
   shift: '&#8679;',
@@ -38,7 +39,7 @@ export class HotkeysShortcutPipe implements PipeTransform {
     this.symbols = this.getPlatformSymbols(platform);
   }
 
-  transform(value: string, dotSeparator = ' + ', thenSeparator = ' then '): any {
+  transform(value: string, dotSeparator = ' + ', thenSeparator = ' then ', aliases: CustomAliases = {}): any {
     if (!value) {
       return '';
     }
@@ -48,7 +49,7 @@ export class HotkeysShortcutPipe implements PipeTransform {
         s
           .split('.')
           .map((c) => c.toLowerCase())
-          .map((c) => this.symbols[c] || c)
+          .map((c) => aliases[c] || this.symbols[c] || c)
           .join(dotSeparator),
       )
       .join(thenSeparator);

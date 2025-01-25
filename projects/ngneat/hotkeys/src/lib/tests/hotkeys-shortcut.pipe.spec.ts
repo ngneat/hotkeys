@@ -57,6 +57,14 @@ describe('Pipe: Hotkeys Shortcut', () => {
     const spectator = createPipe(`{{ 'shift.r' | hotkeysShortcut : '#'}}`);
     expect(spectator.element).toHaveText('&#8679;#r');
   }));
+
+  it('should format keys according to alias', fakeAsync(() => {
+    const spectator = createPipe(`{{ ' alt.enter.up' | hotkeysShortcut :' + ':' then ':{enter: 'enter', up: '^'} }}`);
+    expect(spectator.element).toHaveText('enter');
+    expect(spectator.element).toHaveText('^');
+    expect(spectator.element).not.toHaveText('⌤');
+    expect(spectator.element).not.toHaveText('↑');
+  }));
 });
 
 describe('Pipe: Sequence Hotkeys Shortcut', () => {
@@ -111,5 +119,13 @@ describe('Pipe: Sequence Hotkeys Shortcut', () => {
   it('should format hotkey with custom separator', fakeAsync(() => {
     const spectator = createPipe(`{{ 'shift.r>t' | hotkeysShortcut:'#':' > '}}`);
     expect(spectator.element).toHaveText('&#8679;#r > t');
+  }));
+
+  it('should format keys according to alias', fakeAsync(() => {
+    const spectator = createPipe(`{{ ' alt>enter>up.a' | hotkeysShortcut :' + ':' then ':{enter: 'enter', up: '^'} }}`);
+    expect(spectator.element).toHaveText('enter');
+    expect(spectator.element).toHaveText('^');
+    expect(spectator.element).not.toHaveText('⌤');
+    expect(spectator.element).not.toHaveText('↑');
   }));
 });

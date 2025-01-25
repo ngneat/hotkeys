@@ -233,6 +233,15 @@ The pipe accepts and additional parameter the way key combinations are separated
 </div>
 ```
 
+It is also possible to alias keys to custom strings. For example, the macos key for enter is `⌤`. To display it as `Enter`, you can use the following:
+
+```html
+<div class="help-dialog-shortcut-key">
+  <kbd [innerHTML]="hotkey.keys | hotkeysShortcut: '-' : ' then ': {enter: 'Enter'}"></kbd>
+</div>
+
+```html
+
 ## Allowing hotkeys in form elements
 
 By default, the library prevents hotkey callbacks from firing when their event originates from an `input`, `select`, or `textarea` element or any elements that are contenteditable. To enable hotkeys in these elements, specify them in the `allowIn` parameter:
