@@ -1,4 +1,4 @@
-<div #container>
+<div #container class="container">
   <input
     #input
     placeholder="meta.a"
@@ -27,4 +27,10 @@
     [hotkeysOptions]="{ allowIn: ['INPUT'] }"
     [isSequence]="true"
   />
+
+  <div class="grid-container">
+    <button (click)="pauseHotkeys()">pause hotkeys</button>
+    <button (click)="resumeHotkeys()">resume hotkeys</button>
+  </div>
+  <span> Hotkeys are {{ isPaused() ? 'paused' : 'active' }} </span>
 </div>

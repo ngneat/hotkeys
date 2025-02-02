@@ -16,6 +16,38 @@ describe('Directive: Hotkeys', () => {
     spectator.fixture.detectChanges();
   });
 
+  it('should not trigger hotkey output if hotkeys are paused, should trigger again when resumed', () => {
+    spectator = createDirective(`<div [hotkeys]="'a'"></div>`);
+
+    const hotkeysService = spectator.inject(HotkeysService);
+    hotkeysService.pauseHotkeys();
+    const spyFcn = createSpy('subscribe', (e) => {});
+    spectator.output('hotkey').subscribe(spyFcn);
+    spectator.fixture.detectChanges();
+    spectator.dispatchKeyboardEvent(spectator.element, 'keydown', 'a');
+    expect(spyFcn).not.toHaveBeenCalled();
+
+    hotkeysService.resumeHotkeys();
+    spectator.dispatchKeyboardEvent(spectator.element, 'keydown', 'a');
+    expect(spyFcn).toHaveBeenCalled();
+  });
+
+  it('should not trigger global hotkey output if hotkeys are paused, should trigger again when resumed', () => {
+    spectator = createDirective(`<div [hotkeys]="'a'" isGlobal></div>`);
+
+    const hotkeysService = spectator.inject(HotkeysService);
+    hotkeysService.pauseHotkeys();
+    const spyFcn = createSpy('subscribe', (e) => {});
+    spectator.output('hotkey').subscribe(spyFcn);
+    spectator.fixture.detectChanges();
+    spectator.dispatchKeyboardEvent(document.documentElement, 'keydown', 'a');
+    expect(spyFcn).not.toHaveBeenCalled();
+
+    hotkeysService.resumeHotkeys();
+    spectator.dispatchKeyboardEvent(document.documentElement, 'keydown', 'a');
+    expect(spyFcn).toHaveBeenCalled();
+  });
+
   const shouldIgnoreOnInputTest = (directiveExtras?: string) => {
     const spyFcn = createSpy('subscribe', (...args) => {});
     spectator = createDirective(`<div [hotkeys]="'a'" ${directiveExtras ?? ''}><input></div>`);
@@ -164,6 +196,60 @@ describe('Directive: Sequence Hotkeys', () => {
       spectator.dispatchKeyboardEvent(spectator.element, 'keydown', 'm');
       await sleep(250);
       spectator.fixture.detectChanges();
+    };
+
+    return run();
+  });
+
+  it('should not trigger sequence hotkey if hotkeys are paused, should trigger again when resumed', () => {
+    const run = async () => {
+      // * Need to space out time to prevent other test keystrokes from interfering with sequence
+      await sleep(250);
+      const spyFcn = createSpy('subscribe', (...args) => {});
+      spectator = createDirective(`<div [hotkeys]="'g>m'" [isSequence]="true"></div>`);
+      const hotkeysService = spectator.inject(HotkeysService);
+
+      hotkeysService.pauseHotkeys();
+      spectator.output('hotkey').subscribe(spyFcn);
+      spectator.dispatchKeyboardEvent(spectator.element, 'keydown', 'g');
+      spectator.dispatchKeyboardEvent(spectator.element, 'keydown', 'm');
+      await sleep(250);
+      spectator.fixture.detectChanges();
+      expect(spyFcn).not.toHaveBeenCalled();
+
+      hotkeysService.resumeHotkeys();
+      spectator.dispatchKeyboardEvent(spectator.element, 'keydown', 'g');
+      spectator.dispatchKeyboardEvent(spectator.element, 'keydown', 'm');
+      await sleep(250);
+      spectator.fixture.detectChanges();
+      expect(spyFcn).toHaveBeenCalled();
+    };
+
+    return run();
+  });
+
+  it('should not trigger global sequence hotkey if hotkeys are paused, should trigger again when resumed', () => {
+    const run = async () => {
+      // * Need to space out time to prevent other test keystrokes from interfering with sequence
+      await sleep(250);
+      const spyFcn = createSpy('subscribe', (...args) => {});
+      spectator = createDirective(`<div [hotkeys]="'g>m'" [isSequence]="true" isGlobal></div>`);
+      const hotkeysService = spectator.inject(HotkeysService);
+
+      hotkeysService.pauseHotkeys();
+      spectator.output('hotkey').subscribe(spyFcn);
+      spectator.dispatchKeyboardEvent(document.documentElement, 'keydown', 'g');
+      spectator.dispatchKeyboardEvent(document.documentElement, 'keydown', 'm');
+      await sleep(250);
+      spectator.fixture.detectChanges();
+      expect(spyFcn).not.toHaveBeenCalled();
+
+      hotkeysService.resumeHotkeys();
+      spectator.dispatchKeyboardEvent(document.documentElement, 'keydown', 'g');
+      spectator.dispatchKeyboardEvent(document.documentElement, 'keydown', 'm');
+      await sleep(250);
+      spectator.fixture.detectChanges();
+      expect(spyFcn).toHaveBeenCalled();
     };
 
     return run();

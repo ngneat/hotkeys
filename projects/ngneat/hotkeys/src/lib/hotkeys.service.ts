@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable } from '@angular/core';
+import { computed, Inject, Injectable, signal } from '@angular/core';
 import { EventManager } from '@angular/platform-browser';
 import { EMPTY, fromEvent, Observable, of, Subject, Subscriber, Subscription } from 'rxjs';
 import { debounceTime, filter, finalize, mergeMap, takeUntil, tap } from 'rxjs/operators';
@@ -54,6 +54,10 @@ export class HotkeysService {
   private callbacks: HotkeyCallback[] = [];
   private sequenceMaps = new Map<HTMLElement, SequenceSummary>();
   private sequenceDebounce: number = 250;
+
+  private _isPaused = signal(false);
+  // readonly interface for the isPaused value
+  isPaused = computed(() => this._isPaused());
 
   constructor(
     private eventManager: EventManager,
@@ -152,7 +156,12 @@ export class HotkeysService {
     return getSequenceCompleteObserver().pipe(
       takeUntil<Hotkey>(this.dispose.pipe(filter((v) => v === normalizedKeys))),
       filter((hotkey) => !this.targetIsExcluded(hotkey.allowIn)),
-      tap((hotkey) => this.callbacks.forEach((cb) => cb(hotkey, normalizedKeys, hotkey.element))),
+      filter((hotkey) => !this._isPaused()),
+      tap((hotkey) => {
+        if (!this._isPaused()) {
+          this.callbacks.forEach((cb) => cb(hotkey, normalizedKeys, hotkey.element));
+        }
+      }),
       finalize(() => this.removeShortcuts(normalizedKeys)),
     );
   }
@@ -182,8 +191,10 @@ export class HotkeysService {
           e.preventDefault();
         }
 
-        this.callbacks.forEach((cb) => cb(e, normalizedKeys, hotkey.element));
-        observer.next(e);
+        if (!this._isPaused()) {
+          this.callbacks.forEach((cb) => cb(e, normalizedKeys, hotkey.element));
+          observer.next(e);
+        }
       };
 
       const dispose = this.eventManager.addEventListener(
@@ -196,7 +207,10 @@ export class HotkeysService {
         this.hotkeys.delete(normalizedKeys);
         dispose();
       };
-    }).pipe(takeUntil<KeyboardEvent>(this.dispose.pipe(filter((v) => v === normalizedKeys))));
+    }).pipe(
+      filter(() => !this._isPaused()),
+      takeUntil<KeyboardEvent>(this.dispose.pipe(filter((v) => v === normalizedKeys))),
+    );
   }
 
   removeShortcuts(hotkeys: string | string[]): void {
@@ -262,5 +276,13 @@ export class HotkeysService {
     }
 
     return isExcluded;
+  }
+
+  pauseHotkeys() {
+    this._isPaused.set(true);
+  }
+
+  resumeHotkeys() {
+    this._isPaused.set(false);
   }
 }

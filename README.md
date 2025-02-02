@@ -210,6 +210,19 @@ this.hotkeys.removeShortcuts('meta.a');
 this.hotkeys.removeShortcuts(['meta.1', 'meta.2']);
 ```
 
+### `pauseShortcuts and resumeShortcuts`
+
+Pause the handling of all shortcuts. This is especially useful to prevent hotkeys from firing when a modal or sidebar is open.
+
+```ts
+// hotkey subscriptions won't emmit, and hotkeys callbacks won't be called
+this.hotkeys.pauseShortcuts();
+// hotkeys will work again
+this.hotkeys.resumeShortcuts();
+// get the current state of the hotkeys
+this.hotkeys.isPaused();
+```
+
 ### `setSequenceDebounce`
 
 Set the number of milliseconds to debounce a sequence of keys
