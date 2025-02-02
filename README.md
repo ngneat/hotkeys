@@ -81,12 +81,13 @@ Now you have two ways to start adding shortcuts to your application:
 
 > Hotkeys take care of transforming keys from macOS to Linux and Windows and vice-versa.
 
-Additionally, the directive accepts three more `input`s:
+Additionally, the directive accepts five more `input`s:
 
 - `hotkeysGroup` - define the group name.
 - `hotkeysDescription` - add a description.
 - `hotkeysOptions` - See [Options](#options)
 - `isSequence` - indicate hotkey is a sequence of keys.
+- `isGlobal` - the hotkey event fires even if the element is not focused or active
 
 For example:
 
@@ -95,7 +96,9 @@ For example:
 <input hotkeys="meta.n" 
       hotkeysGroup="File" 
       hotkeysDescription="New Document" 
-      (hotkey)="handleHotkey($event)"
+      (hotkey)="handleHotkey($event)"/>
+
+<button hotkeys="shift.f" isGlobal (hotkey)="handleHotkey($event)">Click me</button>
 ```
 
 Example sequence hotkey:
