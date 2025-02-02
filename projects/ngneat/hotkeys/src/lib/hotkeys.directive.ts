@@ -28,7 +28,13 @@ export class HotkeysDirective implements OnChanges, OnDestroy {
   private subscription: Subscription;
 
   hotkeys = input<string>();
-  isSequence = input(false);
+  // allows the user to set the value by just adding the attribute to the element
+  isSequence = input(false, {
+    transform: (value: boolean | string) => (typeof value === 'string' ? value === '' || value === 'true' : value),
+  });
+  isGlobal = input(false, {
+    transform: (value: boolean | string) => (typeof value === 'string' ? value === '' || value === 'true' : value),
+  });
   hotkeysGroup = input<string>();
   hotkeysOptions = input<Partial<Options>>({});
   hotkeysDescription = input<string>();
@@ -38,6 +44,7 @@ export class HotkeysDirective implements OnChanges, OnDestroy {
     keys: this.hotkeys(),
     group: this.hotkeysGroup(),
     description: this.hotkeysDescription(),
+    global: this.isGlobal(),
     ...this.hotkeysOptions(),
   }));
 

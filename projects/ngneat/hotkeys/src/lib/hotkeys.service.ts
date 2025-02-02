@@ -16,6 +16,7 @@ export type Options = {
   description: string;
   showInHelpMenu: boolean;
   preventDefault: boolean;
+  global?: boolean;
 };
 
 export interface HotkeyGroup {
@@ -125,8 +126,10 @@ export class HotkeysService {
         hotkey: mergedOptions,
       };
 
-      if (this.sequenceMaps.has(mergedOptions.element)) {
-        const sequenceSummary = this.sequenceMaps.get(mergedOptions.element);
+      const hotkeyElement = mergedOptions.global ? this.document.documentElement : mergedOptions.element;
+
+      if (this.sequenceMaps.has(hotkeyElement)) {
+        const sequenceSummary = this.sequenceMaps.get(hotkeyElement);
 
         if (sequenceSummary.hotkeyMap.has(normalizedKeys)) {
           console.error('Duplicated shortcut');
@@ -135,12 +138,12 @@ export class HotkeysService {
 
         sequenceSummary.hotkeyMap.set(normalizedKeys, hotkeySummary);
       } else {
-        const observer = getSequenceObserver(mergedOptions.element, mergedOptions.trigger);
+        const observer = getSequenceObserver(hotkeyElement, mergedOptions.trigger);
         const subscription = observer.subscribe();
 
         const hotkeyMap = new Map<string, HotkeySummary>([[normalizedKeys, hotkeySummary]]);
         const sequenceSummary = { subscription, observer, hotkeyMap };
-        this.sequenceMaps.set(mergedOptions.element, sequenceSummary);
+        this.sequenceMaps.set(hotkeyElement, sequenceSummary);
       }
 
       return hotkeySummary.subject.asObservable();
@@ -182,7 +185,12 @@ export class HotkeysService {
         this.callbacks.forEach((cb) => cb(e, normalizedKeys, hotkey.element));
         observer.next(e);
       };
-      const dispose = this.eventManager.addEventListener(mergedOptions.element, event, handler);
+
+      const dispose = this.eventManager.addEventListener(
+        mergedOptions.global ? this.document.documentElement : mergedOptions.element,
+        event,
+        handler,
+      );
 
       return () => {
         this.hotkeys.delete(normalizedKeys);
