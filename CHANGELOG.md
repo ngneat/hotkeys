@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.1.0](https://github.com/ngneat/hotkeys/compare/v4.0.0...v4.1.0) (2025-02-04)
+
+
+### Features
+
+* add aliases to the hotkeys pipe ([4cbf546](https://github.com/ngneat/hotkeys/commit/4cbf546abc11602f524a12be369a62949db7e88d)), closes [#65](https://github.com/ngneat/hotkeys/issues/65)
+* adds a global modifier to the directive ([27bcc43](https://github.com/ngneat/hotkeys/commit/27bcc43de5e984ad81b239c1a5a0b354063e0ee7)), closes [#35](https://github.com/ngneat/hotkeys/issues/35)
+* adds pausing and resuming to the hotkey service ([f11c600](https://github.com/ngneat/hotkeys/commit/f11c600ee365f9a1a6466936d93fae2353290272)), closes [#62](https://github.com/ngneat/hotkeys/issues/62)
+* adds pausing and resuming to the hotkey service ([fe7e558](https://github.com/ngneat/hotkeys/commit/fe7e558104e73032b6e6bf561156417dab881b68)), closes [#62](https://github.com/ngneat/hotkeys/issues/62)
+
 ## [4.0.0](https://github.com/ngneat/hotkeys/compare/v2.0.0...v4.0.0) (2024-03-20)
 
 
