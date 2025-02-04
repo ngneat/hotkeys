@@ -45,6 +45,17 @@ describe('Service: Hotkeys', () => {
     expect(spyFcn).toHaveBeenCalled();
   });
 
+  it('should not listen to keydown if hotkeys are paused, should listen again when resumed', () => {
+    const spyFcn = createSpy('subscribe', (e) => {});
+    spectator.service.addShortcut({ keys: 'a' }).subscribe(spyFcn);
+    spectator.service.pause();
+    fakeKeyboardPress('a');
+    expect(spyFcn).not.toHaveBeenCalled();
+    spectator.service.resume();
+    fakeKeyboardPress('a');
+    expect(spyFcn).toHaveBeenCalled();
+  });
+
   it('should listen to keyup', () => {
     const spyFcn = createSpy('subscribe', (e) => {});
     spectator.service.addShortcut({ keys: 'a', trigger: 'keyup' }).subscribe(spyFcn);
@@ -56,6 +67,20 @@ describe('Service: Hotkeys', () => {
     const spyFcn = createSpy('subscribe', (...args) => {});
     spectator.service.addShortcut({ keys: 'a' }).subscribe();
     spectator.service.onShortcut(spyFcn);
+    fakeKeyboardPress('a');
+    expect(spyFcn).toHaveBeenCalled();
+  });
+
+  it('should not call callback when hotkeys are paused, should call again when resumed', () => {
+    const spyFcn = createSpy('subscribe', (...args) => {});
+    spectator.service.addShortcut({ keys: 'a' }).subscribe();
+    spectator.service.onShortcut(spyFcn);
+
+    spectator.service.pause();
+    fakeKeyboardPress('a');
+    expect(spyFcn).not.toHaveBeenCalled();
+
+    spectator.service.resume();
     fakeKeyboardPress('a');
     expect(spyFcn).toHaveBeenCalled();
   });
