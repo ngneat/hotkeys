@@ -55,9 +55,9 @@ export class HotkeysService {
   private sequenceMaps = new Map<HTMLElement, SequenceSummary>();
   private sequenceDebounce: number = 250;
 
-  private _isPaused = signal(false);
-  // readonly interface for the isPaused value
-  isPaused = computed(() => this._isPaused());
+  private _isActive = signal(true);
+  // readonly interface for the isActive value
+  isActive = computed(() => this._isActive());
 
   constructor(
     private eventManager: EventManager,
@@ -156,11 +156,9 @@ export class HotkeysService {
     return getSequenceCompleteObserver().pipe(
       takeUntil<Hotkey>(this.dispose.pipe(filter((v) => v === normalizedKeys))),
       filter((hotkey) => !this.targetIsExcluded(hotkey.allowIn)),
-      filter((hotkey) => !this._isPaused()),
+      filter((hotkey) => this._isActive()),
       tap((hotkey) => {
-        if (!this._isPaused()) {
-          this.callbacks.forEach((cb) => cb(hotkey, normalizedKeys, hotkey.element));
-        }
+        this.callbacks.forEach((cb) => cb(hotkey, normalizedKeys, hotkey.element));
       }),
       finalize(() => this.removeShortcuts(normalizedKeys)),
     );
@@ -191,7 +189,7 @@ export class HotkeysService {
           e.preventDefault();
         }
 
-        if (!this._isPaused()) {
+        if (this._isActive()) {
           this.callbacks.forEach((cb) => cb(e, normalizedKeys, hotkey.element));
           observer.next(e);
         }
@@ -208,7 +206,7 @@ export class HotkeysService {
         dispose();
       };
     }).pipe(
-      filter(() => !this._isPaused()),
+      filter(() => this._isActive()),
       takeUntil<KeyboardEvent>(this.dispose.pipe(filter((v) => v === normalizedKeys))),
     );
   }
@@ -278,11 +276,11 @@ export class HotkeysService {
     return isExcluded;
   }
 
-  pauseHotkeys() {
-    this._isPaused.set(true);
+  pause() {
+    this._isActive.set(false);
   }
 
-  resumeHotkeys() {
-    this._isPaused.set(false);
+  resume() {
+    this._isActive.set(true);
   }
 }

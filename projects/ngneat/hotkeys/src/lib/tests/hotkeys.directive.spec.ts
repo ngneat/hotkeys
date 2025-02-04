@@ -20,14 +20,14 @@ describe('Directive: Hotkeys', () => {
     spectator = createDirective(`<div [hotkeys]="'a'"></div>`);
 
     const hotkeysService = spectator.inject(HotkeysService);
-    hotkeysService.pauseHotkeys();
+    hotkeysService.pause();
     const spyFcn = createSpy('subscribe', (e) => {});
     spectator.output('hotkey').subscribe(spyFcn);
     spectator.fixture.detectChanges();
     spectator.dispatchKeyboardEvent(spectator.element, 'keydown', 'a');
     expect(spyFcn).not.toHaveBeenCalled();
 
-    hotkeysService.resumeHotkeys();
+    hotkeysService.resume();
     spectator.dispatchKeyboardEvent(spectator.element, 'keydown', 'a');
     expect(spyFcn).toHaveBeenCalled();
   });
@@ -36,14 +36,14 @@ describe('Directive: Hotkeys', () => {
     spectator = createDirective(`<div [hotkeys]="'a'" isGlobal></div>`);
 
     const hotkeysService = spectator.inject(HotkeysService);
-    hotkeysService.pauseHotkeys();
+    hotkeysService.pause();
     const spyFcn = createSpy('subscribe', (e) => {});
     spectator.output('hotkey').subscribe(spyFcn);
     spectator.fixture.detectChanges();
     spectator.dispatchKeyboardEvent(document.documentElement, 'keydown', 'a');
     expect(spyFcn).not.toHaveBeenCalled();
 
-    hotkeysService.resumeHotkeys();
+    hotkeysService.resume();
     spectator.dispatchKeyboardEvent(document.documentElement, 'keydown', 'a');
     expect(spyFcn).toHaveBeenCalled();
   });
@@ -209,7 +209,7 @@ describe('Directive: Sequence Hotkeys', () => {
       spectator = createDirective(`<div [hotkeys]="'g>m'" [isSequence]="true"></div>`);
       const hotkeysService = spectator.inject(HotkeysService);
 
-      hotkeysService.pauseHotkeys();
+      hotkeysService.pause();
       spectator.output('hotkey').subscribe(spyFcn);
       spectator.dispatchKeyboardEvent(spectator.element, 'keydown', 'g');
       spectator.dispatchKeyboardEvent(spectator.element, 'keydown', 'm');
@@ -217,7 +217,7 @@ describe('Directive: Sequence Hotkeys', () => {
       spectator.fixture.detectChanges();
       expect(spyFcn).not.toHaveBeenCalled();
 
-      hotkeysService.resumeHotkeys();
+      hotkeysService.resume();
       spectator.dispatchKeyboardEvent(spectator.element, 'keydown', 'g');
       spectator.dispatchKeyboardEvent(spectator.element, 'keydown', 'm');
       await sleep(250);
@@ -236,7 +236,7 @@ describe('Directive: Sequence Hotkeys', () => {
       spectator = createDirective(`<div [hotkeys]="'g>m'" [isSequence]="true" isGlobal></div>`);
       const hotkeysService = spectator.inject(HotkeysService);
 
-      hotkeysService.pauseHotkeys();
+      hotkeysService.pause();
       spectator.output('hotkey').subscribe(spyFcn);
       spectator.dispatchKeyboardEvent(document.documentElement, 'keydown', 'g');
       spectator.dispatchKeyboardEvent(document.documentElement, 'keydown', 'm');
@@ -244,7 +244,7 @@ describe('Directive: Sequence Hotkeys', () => {
       spectator.fixture.detectChanges();
       expect(spyFcn).not.toHaveBeenCalled();
 
-      hotkeysService.resumeHotkeys();
+      hotkeysService.resume();
       spectator.dispatchKeyboardEvent(document.documentElement, 'keydown', 'g');
       spectator.dispatchKeyboardEvent(document.documentElement, 'keydown', 'm');
       await sleep(250);

@@ -16,7 +16,7 @@ export class AppComponent implements AfterViewInit {
   input2 = viewChild<ElementRef<HTMLElement>>('input2');
   input3 = viewChild<ElementRef<HTMLElement>>('input3');
   container = viewChild<ElementRef<HTMLElement>>('container');
-  isPaused = this.hotkeys.isPaused;
+  isActive = this.hotkeys.isActive;
 
   ngAfterViewInit(): void {
     this.hotkeys.onShortcut((event, keys) => console.log(keys));
@@ -104,10 +104,10 @@ export class AppComponent implements AfterViewInit {
   }
 
   pauseHotkeys() {
-    this.hotkeys.pauseHotkeys();
+    this.hotkeys.pause();
   }
 
   resumeHotkeys() {
-    this.hotkeys.resumeHotkeys();
+    this.hotkeys.resume();
   }
 }

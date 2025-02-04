@@ -48,10 +48,10 @@ describe('Service: Hotkeys', () => {
   it('should not listen to keydown if hotkeys are paused, should listen again when resumed', () => {
     const spyFcn = createSpy('subscribe', (e) => {});
     spectator.service.addShortcut({ keys: 'a' }).subscribe(spyFcn);
-    spectator.service.pauseHotkeys();
+    spectator.service.pause();
     fakeKeyboardPress('a');
     expect(spyFcn).not.toHaveBeenCalled();
-    spectator.service.resumeHotkeys();
+    spectator.service.resume();
     fakeKeyboardPress('a');
     expect(spyFcn).toHaveBeenCalled();
   });
@@ -76,11 +76,11 @@ describe('Service: Hotkeys', () => {
     spectator.service.addShortcut({ keys: 'a' }).subscribe();
     spectator.service.onShortcut(spyFcn);
 
-    spectator.service.pauseHotkeys();
+    spectator.service.pause();
     fakeKeyboardPress('a');
     expect(spyFcn).not.toHaveBeenCalled();
 
-    spectator.service.resumeHotkeys();
+    spectator.service.resume();
     fakeKeyboardPress('a');
     expect(spyFcn).toHaveBeenCalled();
   });
