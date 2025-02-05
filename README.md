@@ -191,11 +191,9 @@ export class AppComponent implements AfterViewInit {
 ```
 
 It accepts a second input that allows defining the hotkey that should open the dialog. The default shortcut is `Shift + ?`. Here's how `HotkeysHelpComponent` looks like:
-```
 <p align="center">
  <img width="50%" height="50%" src="./help_screenshot.png">
 </p>
-```
 
 You can also provide a custom component. To help you with that, the service exposes the `getShortcuts` method.
 
